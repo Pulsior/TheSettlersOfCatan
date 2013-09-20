@@ -1,5 +1,5 @@
 name: Settlers of Catan
-main: com.DefPdeW.SettlersOfCatan.SettlersOfCatan
+main: com.Pulsior.SettlersOfCatan.SettlersOfCatan
 version: 1.0
 commands:
    join:

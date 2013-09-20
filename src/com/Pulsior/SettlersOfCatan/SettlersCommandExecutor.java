@@ -14,6 +14,10 @@ import org.bukkit.entity.Player;
  */
 public class SettlersCommandExecutor implements CommandExecutor {
 
+	/*
+	 * Declares necessary variables 
+	 */
+	@SuppressWarnings("unused")
 	private SettlersOfCatan main;
 	private String[] joinedPlayers = new String[4];
 	int amtOfPlayers = 0;
@@ -22,9 +26,20 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean blue = false;
 	boolean black = false;
 	boolean green = false;
-
+	
+	/**
+	 * Constructor required for CommandExecutor functions
+	 * @param plugin
+	 */
 	public SettlersCommandExecutor(SettlersOfCatan plugin) {
 		main = plugin;
+	}
+	
+	/**
+	 * Overridden empty constructor method, to instantiate this class and use its methods without trouble
+	 */
+	public SettlersCommandExecutor(){
+		
 	}
 
 
@@ -122,11 +137,24 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return false;
 	}
+	/**
+	 * Fills the joinedPlayers array with null values, to avoid exceptions when reading the array data.
+	 * Deprecated, but preserving it for future use
+	 */
+	@Deprecated
 	public void flushArray(){
 		for(int i = 0; i < 4; i++){
 			joinedPlayers[i] = null;
 		}
+		for(int i = 0; i < 4; i++){
+			registeredPlayers[i] = null;
+		}
 	}
+	/**
+	 * Sends a simple message to a player with their color of choice
+	 * @param snd
+	 * @param color
+	 */
 	public void colorMessage(CommandSender snd, String color){
 		if(color.equalsIgnoreCase("red")){
 			snd.sendMessage("You are now playing with color §4red");
@@ -148,7 +176,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("green")){green = true;}
 		if(color.equalsIgnoreCase("black")){black = true;}
 	}
-	public void setColoredName(String color, CommandSender snd){
+/**
+ * Alters the name of a player so his/her team color van be seen in the chat	
+ * @param color
+ * @param snd
+ */
+public void setColoredName(String color, CommandSender snd){
 		Player player = Bukkit.getServer().getPlayer(snd.getName());
 		if(color.equalsIgnoreCase("red") ){
 			player.setDisplayName("§4"+player.getName());	
@@ -163,6 +196,19 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			player.setDisplayName("§0"+player.getName());	
 		}
 	}
+	
+	public SettlerPlayer getSettlerByPlayerName(String playerName){
+		for(int x = 0; x < 4; x++){
+			if(registeredPlayers[x] != null){
+				if(registeredPlayers[x].getPlayerName().equalsIgnoreCase(playerName)){
+					return registeredPlayers[x];
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 }
 
 

@@ -36,5 +36,9 @@ public class SettlerPlayer {
 	public TeamColor getColor(){
 		return personalColor;
 	}
+	
+	public String getPlayerName(){
+		return "3";
+	}
 
 }
