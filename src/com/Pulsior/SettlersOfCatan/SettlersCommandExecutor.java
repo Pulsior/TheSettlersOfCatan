@@ -1,5 +1,9 @@
 package com.Pulsior.SettlersOfCatan;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +30,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean blue = false;
 	boolean black = false;
 	boolean green = false;
-	
+	DataStorage d = new DataStorage();
+	SettlerPlayer Player1;
+	SettlerPlayer Player2;
+	SettlerPlayer Player3;
+	SettlerPlayer Player4;
+
 	/**
 	 * Constructor required for CommandExecutor functions
 	 * @param plugin
@@ -34,12 +43,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	public SettlersCommandExecutor(SettlersOfCatan plugin) {
 		main = plugin;
 	}
-	
+
 	/**
 	 * Overridden empty constructor method, to instantiate this class and use its methods without trouble
 	 */
 	public SettlersCommandExecutor(){
-		
+
 	}
 
 
@@ -59,13 +68,15 @@ public class SettlersCommandExecutor implements CommandExecutor {
 					}
 
 					else{
-						registeredPlayers[amtOfPlayers] = new SettlerPlayer(sender.getName(), args[0]);
+						Player1 = new SettlerPlayer(sender.getName(), args[0]);
+						//registeredPlayers[0] = new SettlerPlayer(sender.getName(), args[0]);
+						//d.addSettler( new SettlerPlayer( sender.getName(), args[0] ) );
 						joinedPlayers[amtOfPlayers] = sender.getName();
 						amtOfPlayers = amtOfPlayers + 1;
 						colorMessage(sender, args[0]);
 						setColorInUse(args[0]);
 						setColoredName(args[0], sender);
-						
+
 						return true;
 					}
 
@@ -76,8 +87,13 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				return true;
 			}
 		}
+		if(cmd.getName().equalsIgnoreCase("check")){
+			writePlayerData("args1", "args1");
+			return true;
+		}
 		return false;
 	}
+
 
 	/**
 	 * Checks whether a player has joined the Settlers game already
@@ -176,12 +192,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("green")){green = true;}
 		if(color.equalsIgnoreCase("black")){black = true;}
 	}
-/**
- * Alters the name of a player so his/her team color van be seen in the chat	
- * @param color
- * @param snd
- */
-public void setColoredName(String color, CommandSender snd){
+	/**
+	 * Alters the name of a player so his/her team color van be seen in the chat	
+	 * @param color
+	 * @param snd
+	 */
+	public void setColoredName(String color, CommandSender snd){
 		Player player = Bukkit.getServer().getPlayer(snd.getName());
 		if(color.equalsIgnoreCase("red") ){
 			player.setDisplayName("§4"+player.getName());	
@@ -196,7 +212,7 @@ public void setColoredName(String color, CommandSender snd){
 			player.setDisplayName("§0"+player.getName());	
 		}
 	}
-	
+
 	public SettlerPlayer getSettlerByPlayerName(String playerName){
 		for(int x = 0; x < 4; x++){
 			if(registeredPlayers[x] != null){
@@ -205,10 +221,25 @@ public void setColoredName(String color, CommandSender snd){
 				}
 			}
 		}
-		return null;
+		return new SettlerPlayer("Dear sir, you failed. Period.", "red");
 	}
-	
-	
+	public void writePlayerData(String arg1, String arg2){
+		
+		try {
+			PrintWriter writer = new PrintWriter("plugins/data.txt", "UTF-8");
+			writer.println("The first line");
+			writer.println("The second line");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			Bukkit.getServer().getPlayer("DefPdeW").sendMessage("Shit");
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			Bukkit.getServer().getPlayer("DefPdeW").sendMessage("Shit");
+			e.printStackTrace();
+		}
+		
+	}
+
 }
 
 

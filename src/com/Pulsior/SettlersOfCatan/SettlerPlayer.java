@@ -38,7 +38,7 @@ public class SettlerPlayer {
 	}
 	
 	public String getPlayerName(){
-		return "3";
+		return "void";
 	}
 
 }

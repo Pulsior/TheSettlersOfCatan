@@ -8,7 +8,9 @@ public final class SettlersOfCatan extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		getCommand("join").setExecutor(new SettlersCommandExecutor(this));
+		getCommand("check").setExecutor(new SettlersCommandExecutor(this));
 		getServer().getPluginManager().registerEvents(new SettlersEventListener(), this);
+		
 		
 	}
 
