@@ -4,11 +4,21 @@ version: 1.0
 commands:
    join:
       description: Join the game
-      usage: /<command> [color]
+      usage: /<command> [color] (red, blue, green or black)
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
    check:
       description: Debug command
       usage: /<command>
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>
+   whichcoloris:
+      description: Tells you with which color a player is playing
+      usage: /<command> [player]
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>
+   whoplayswith:
+      description: Tells you who is playing with that color
+      usage: /<command> [color]
       permission: <plugin name>.basic
       permission-message: You don't have <permission>

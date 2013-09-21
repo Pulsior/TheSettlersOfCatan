@@ -1,9 +1,5 @@
 package com.Pulsior.SettlersOfCatan;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,16 +21,11 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	private SettlersOfCatan main;
 	private String[] joinedPlayers = new String[4];
 	int amtOfPlayers = 0;
-	SettlerPlayer[] registeredPlayers = new SettlerPlayer[4];
+	SettlerFileIO io = new SettlerFileIO();
 	boolean red= false;
 	boolean blue = false;
 	boolean black = false;
 	boolean green = false;
-	DataStorage d = new DataStorage();
-	SettlerPlayer Player1;
-	SettlerPlayer Player2;
-	SettlerPlayer Player3;
-	SettlerPlayer Player4;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -55,6 +46,9 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,	String[] args) {
 		//IF the command equals join AND the command contains one argument AND the sender has not joined  the game yet
+		/*
+		 * Join the Settlers of Catan game with your specified color
+		 */
 		if(cmd.getName().equalsIgnoreCase("join") && args.length == 1) {
 			if(isJoined(sender.getName()) == false){
 				//IF the second argument is either red, green, blue or black
@@ -63,16 +57,20 @@ public class SettlersCommandExecutor implements CommandExecutor {
 						args[0].equalsIgnoreCase("black")){
 
 					if( colorInUse( args[0] ) == true){
-						sender.sendMessage("This color is already in use!");
+						sender.sendMessage("§cThis color is already in use!");
+						return true;
+					}
+					if( !(sender instanceof Player)){
+						sender.sendMessage("Only players can use this command");
 						return true;
 					}
 
 					else{
-						Player1 = new SettlerPlayer(sender.getName(), args[0]);
-						//registeredPlayers[0] = new SettlerPlayer(sender.getName(), args[0]);
-						//d.addSettler( new SettlerPlayer( sender.getName(), args[0] ) );
 						joinedPlayers[amtOfPlayers] = sender.getName();
 						amtOfPlayers = amtOfPlayers + 1;
+						if(io.writeDataFile(sender.getName(), args[0]) == false){
+							sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
+						};
 						colorMessage(sender, args[0]);
 						setColorInUse(args[0]);
 						setColoredName(args[0], sender);
@@ -87,9 +85,39 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				return true;
 			}
 		}
+		/*
+		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
+		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			writePlayerData("args1", "args1");
+			//TODO Add logic for future debug command
 			return true;
+		}
+		/*
+		 * Get the name of a player by specifying a color
+		 */
+		if(cmd.getName().equalsIgnoreCase("whoplayswith")){
+			if(args.length == 1){
+				String color = args[0];
+				if(getPlayerName(color) != null){
+					sender.sendMessage("§a"+getPlayerName(color)+ " is playing with "+color);
+				}
+				else{
+					sender.sendMessage("§cNo one is playing with "+color+" yet");
+				}
+				return true;
+			}
+		}
+		if(cmd.getName().equalsIgnoreCase("whichcoloris")){
+			if(args.length == 1){
+				String playerName = args[0];
+				if(getColor(playerName) != null){
+					sender.sendMessage("§a"+playerName+" is playing with "+getColor(playerName));
+				}
+				else{
+					sender.sendMessage("§c"+playerName+" is not in the game");
+				}
+				return true;
+			}
 		}
 		return false;
 	}
@@ -102,9 +130,9 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	 */
 	public boolean isJoined(String playerName){
 
-		for(int i = 0; i < 4; i++){
-			if(joinedPlayers[i] != null){
-				if(joinedPlayers[i].equalsIgnoreCase(playerName) ){
+		for(int x = 0; x < 4; x++){
+			if(joinedPlayers[x] != null){
+				if(joinedPlayers[x].equalsIgnoreCase(playerName) ){
 					return true;
 				}	
 			}
@@ -162,9 +190,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		for(int i = 0; i < 4; i++){
 			joinedPlayers[i] = null;
 		}
-		for(int i = 0; i < 4; i++){
-			registeredPlayers[i] = null;
-		}
 	}
 	/**
 	 * Sends a simple message to a player with their color of choice
@@ -193,7 +218,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("black")){black = true;}
 	}
 	/**
-	 * Alters the name of a player so his/her team color van be seen in the chat	
+	 * Alters the name of a player so his/her team color can be seen in the chat	
 	 * @param color
 	 * @param snd
 	 */
@@ -212,33 +237,42 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			player.setDisplayName("§0"+player.getName());	
 		}
 	}
+	/**
+	 * Returns the color the player chose when joining the game
+	 * @param playerName
+	 * @return The player color
+	 */
+	public String getColor(String playerName){
 
-	public SettlerPlayer getSettlerByPlayerName(String playerName){
-		for(int x = 0; x < 4; x++){
-			if(registeredPlayers[x] != null){
-				if(registeredPlayers[x].getPlayerName().equalsIgnoreCase(playerName)){
-					return registeredPlayers[x];
-				}
+		String[] namesAndColors = io.readDataFile();
+		for(int x = 0; x < namesAndColors.length; x++){
+
+			if(namesAndColors[x].equalsIgnoreCase(playerName)){
+				return namesAndColors[x+1];
 			}
+
 		}
-		return new SettlerPlayer("Dear sir, you failed. Period.", "red");
+		return null;
 	}
-	public void writePlayerData(String arg1, String arg2){
-		
-		try {
-			PrintWriter writer = new PrintWriter("plugins/data.txt", "UTF-8");
-			writer.println("The first line");
-			writer.println("The second line");
-			writer.close();
-		} catch (FileNotFoundException e) {
-			Bukkit.getServer().getPlayer("DefPdeW").sendMessage("Shit");
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			Bukkit.getServer().getPlayer("DefPdeW").sendMessage("Shit");
-			e.printStackTrace();
+
+	/**
+	 * Returns the name of the player using the specified color
+	 * @param color
+	 * @return
+	 */
+	public String getPlayerName(String color){
+		String[] namesAndColors = io.readDataFile();
+		for(int x = 0; x < namesAndColors.length; x++){
+
+			if(namesAndColors[x].equalsIgnoreCase(color)){
+				return namesAndColors[x-1];
+			}
+
 		}
-		
+		return null;
 	}
+
+
 
 }
 
