@@ -20,6 +20,7 @@ public final class SettlersOfCatan extends JavaPlugin{
 		getCommand("whichcoloris").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("whoplayswith").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("check").setExecutor(new SettlersCommandExecutor(this));
+		getCommand("buy").setExecutor(new SettlersCommandExecutor(this));
 		getServer().getPluginManager().registerEvents(new SettlersEventListener(), this);
 		
 		

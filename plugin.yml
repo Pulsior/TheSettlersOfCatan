@@ -22,3 +22,8 @@ commands:
       usage: /<command> [color]
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
+   buy:
+      description: Buy a settlement, road or city with your resources
+      usage: /<command> [whatever you want to buy]
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>

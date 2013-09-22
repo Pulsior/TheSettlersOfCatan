@@ -22,6 +22,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	private String[] joinedPlayers = new String[4];
 	int amtOfPlayers = 0;
 	SettlerFileIO io = new SettlerFileIO();
+	IngameTrade trade = new IngameTrade();
 	boolean red= false;
 	boolean blue = false;
 	boolean black = false;
@@ -74,6 +75,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 						colorMessage(sender, args[0]);
 						setColorInUse(args[0]);
 						setColoredName(args[0], sender);
+						Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);
+						//Bukkit.getServer().getPlayer(sender.getName()).getInventory().setMaxStackSize(1);
 
 						return true;
 					}
@@ -89,7 +92,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			//TODO Add logic for future debug command
+			Player p = Bukkit.getServer().getPlayer( sender.getName());
+			trade.buyRoad(p, getColor(p.getName()) );
 			return true;
 		}
 		/*
@@ -104,6 +108,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				else{
 					sender.sendMessage("§cNo one is playing with "+color+" yet");
 				}
+				
 				return true;
 			}
 		}
@@ -115,6 +120,22 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				}
 				else{
 					sender.sendMessage("§c"+playerName+" is not in the game");
+				}
+				return true;
+			}
+		}
+		if(cmd.getName().equalsIgnoreCase("buy")){
+			Player player = Bukkit.getServer().getPlayer(sender.getName());
+			if(args.length == 1){
+				if( args[0].equalsIgnoreCase("settlement") ){
+					trade.buySettlement(player);
+				}
+				if( args[0].equalsIgnoreCase("city")){
+					trade.buyCity(player);
+				}
+				if( args [0].equalsIgnoreCase("road")){
+					String color = getColor(player.getName() );
+					trade.buyRoad(player, color);
 				}
 				return true;
 			}
@@ -209,6 +230,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("black")){
 			snd.sendMessage("You are now playing with color §0black");
 		}
+		
 
 	}
 	public void setColorInUse(String color){
