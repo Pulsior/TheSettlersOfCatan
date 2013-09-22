@@ -92,8 +92,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			Player p = Bukkit.getServer().getPlayer( sender.getName());
-			trade.buyRoad(p, getColor(p.getName()) );
 			return true;
 		}
 		/*

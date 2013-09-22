@@ -13,7 +13,10 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class IngameTrade {
 
-
+	/**
+	 * Let a player trade in resources for a road in his/her personal color
+	 * @param player
+	 */
 	public void buyRoad(Player player, String color){
 		PlayerInventory inv = player.getInventory();
 		ItemStack wood = new ItemStack(Material.LOG, 1);
@@ -39,7 +42,10 @@ public class IngameTrade {
 		}
 
 	}
-
+	/**
+	 * Let a player trade in resources for an auto-building settlement
+	 * @param player
+	 */
 	public void buySettlement(Player player){
 		PlayerInventory inv = player.getInventory();
 		if(inv.contains( 17, 1 ) && inv.contains( 45, 1 ) && inv.contains (296, 1) && inv.contains(35, 1)){ //If the inventory contains one wood, brick, wool and wheat///
@@ -59,13 +65,17 @@ public class IngameTrade {
 			inv.remove(is4);
 			is4.setAmount(is4.getAmount()-1);
 			inv.addItem(is4);
-			inv.addItem(new ItemStack(Material.DIRT, 1));
+			inv.addItem(new ItemStack(Material.OBSIDIAN, 1));
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a settlement!");
 		}
 		else{
 			player.sendMessage("§cYou are missing the required materials");
 		}
 	}
+	/**
+	 * Let a player trade in resources for an auto-building city
+	 * @param player
+	 */
 	public void buyCity(Player player){
 		PlayerInventory inv = player.getInventory();
 		if(inv.contains(296, 2) && inv.contains(15, 3)){
@@ -77,13 +87,20 @@ public class IngameTrade {
 			inv.remove(is2);
 			is2.setAmount(is2.getAmount()-2);
 			inv.addItem(is2);
-			inv.addItem(new ItemStack(Material.COBBLESTONE));
+			inv.addItem(new ItemStack(Material.BEDROCK));
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a city!");
 		}
 		else{
 			player.sendMessage("§cYou are missing the required materials");
 		}
 	}
+	/**
+	 * Util method to get needed ItemStacks out of one's inventory
+	 * @param inv
+	 * @param wishedMaterial
+	 * @param wishedSize
+	 * @return
+	 */
 	public ItemStack readInventory(PlayerInventory inv, Material wishedMaterial, int wishedSize){
 		ItemStack[] items = inv.getContents();
 		for(int x = 0; x < items.length; x++){
@@ -99,6 +116,11 @@ public class IngameTrade {
 		}
 		return null;
 	}
+	/**
+	 * Check one's color and turns it into the adequate short
+	 * @param color
+	 * @return
+	 */
 	public short colorCheck(String color){
 		if(color.equalsIgnoreCase("red")){return 14;}
 		if(color.equalsIgnoreCase("blue")){return 11;}
