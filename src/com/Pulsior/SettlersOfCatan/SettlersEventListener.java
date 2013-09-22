@@ -2,7 +2,6 @@ package com.Pulsior.SettlersOfCatan;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,10 +17,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class SettlersEventListener implements Listener{
 
+
 	private SettlersOfCatan main;
 	SettlerFileIO io = new SettlerFileIO();
 
 	boolean shouldBuild = false;
+	StructureGen gen = new StructureGen();
 
 	SettlersCommandExecutor c = new SettlersCommandExecutor();
 	@EventHandler
@@ -31,23 +32,14 @@ public class SettlersEventListener implements Listener{
 	@EventHandler
 	public void onPlayerBuild(BlockPlaceEvent event){
 		Block block = event.getBlock();
-		if(block.getType().equals(Material.OBSIDIAN)){ //If the block is bedrock, a settlement will be built
-			block.setType(Material.WOOD);
+		if(block.getType().equals(Material.COMMAND)){ //If the block is a command block, a settlement will be built
 			Location loc = block.getLocation();
-			loc.setX(loc.getX()+1);
-			loc.getBlock().setType(Material.WOOD);
-			loc.setZ(loc.getZ()-1);
-			loc.getBlock().setType(Material.WOOD);
-			loc.setX(loc.getX()-1);
-			loc.getBlock().setType(Material.WOOD);
-			loc.setY(loc.getY()+1);
-			loc.getBlock().setType(Material.WOOL);
-			loc.setX(loc.getX()+1);
-			loc.getBlock().setType(Material.WOOL);
-			loc.setZ(loc.getZ()+1);
-			loc.getBlock().setType(Material.WOOL);
-			loc.setX(loc.getX()-1);
-			loc.getBlock().setType(Material.WOOL);
+			gen.buildSettlement(loc);
+		}
+		if(block.getType().equals(Material.BEDROCK)){
+			Location loc = block.getLocation();
+			gen.buildCity(loc);
+			
 		}
 	}
 
@@ -77,5 +69,6 @@ public class SettlersEventListener implements Listener{
 	public void setBuild(){
 		shouldBuild = true;
 	}
-
+	
+	
 }

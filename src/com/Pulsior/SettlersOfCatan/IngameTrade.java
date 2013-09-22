@@ -65,7 +65,7 @@ public class IngameTrade {
 			inv.remove(is4);
 			is4.setAmount(is4.getAmount()-1);
 			inv.addItem(is4);
-			inv.addItem(new ItemStack(Material.OBSIDIAN, 1));
+			inv.addItem(new ItemStack(Material.COMMAND, 1));
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a settlement!");
 		}
 		else{
