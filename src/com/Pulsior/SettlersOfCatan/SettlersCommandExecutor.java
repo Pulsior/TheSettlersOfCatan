@@ -5,14 +5,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 /**
  * The CommandExecutor class, where much of the magic happens. To prevent class data transition errors,
  * most logic can be found in this class as well.
- * @author DefPdeW
+ * @author Pulsior
  *
  */
 public class SettlersCommandExecutor implements CommandExecutor {
+
+
 
 	/*
 	 * Declares necessary variables 
@@ -27,6 +30,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean blue = false;
 	boolean black = false;
 	boolean green = false;
+	boolean game;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -51,47 +55,56 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Join the Settlers of Catan game with your specified color
 		 */
 		if(cmd.getName().equalsIgnoreCase("join") && args.length == 1) {
-			if(isJoined(sender.getName()) == false){
-				//IF the second argument is either red, green, blue or black
+			if(io.getGameStatus()){
+				if(isJoined(sender.getName()) == false){
+					//IF the second argument is either red, green, blue or black
 
-				if(args[0].equalsIgnoreCase("red") ||args[0].equalsIgnoreCase("green") ||args[0].equalsIgnoreCase("blue") ||
-						args[0].equalsIgnoreCase("black")){
+					if(args[0].equalsIgnoreCase("red") ||args[0].equalsIgnoreCase("green") ||args[0].equalsIgnoreCase("blue") ||
+							args[0].equalsIgnoreCase("black")){
 
-					if( colorInUse( args[0] ) == true){
-						sender.sendMessage("§cThis color is already in use!");
-						return true;
+						if( colorInUse( args[0] ) == true){
+							sender.sendMessage("§cThis color is already in use!");
+							return true;
+						}
+						if( !(sender instanceof Player)){
+							sender.sendMessage("Only players can use this command");
+							return true;
+						}
+
+						else{
+							joinedPlayers[amtOfPlayers] = sender.getName();
+							amtOfPlayers = amtOfPlayers + 1;
+							if(io.writeDataFile(sender.getName(), args[0]) == false){
+								sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
+							};
+							colorMessage(sender, args[0]);
+							setColorInUse(args[0]);
+							setColoredName(args[0], sender);
+							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);
+							//Bukkit.getServer().getPlayer(sender.getName()).getInventory().setMaxStackSize(1);
+
+							return true;
+						}
+
 					}
-					if( !(sender instanceof Player)){
-						sender.sendMessage("Only players can use this command");
-						return true;
-					}
-
-					else{
-						joinedPlayers[amtOfPlayers] = sender.getName();
-						amtOfPlayers = amtOfPlayers + 1;
-						if(io.writeDataFile(sender.getName(), args[0]) == false){
-							sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
-						};
-						colorMessage(sender, args[0]);
-						setColorInUse(args[0]);
-						setColoredName(args[0], sender);
-						Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);
-						//Bukkit.getServer().getPlayer(sender.getName()).getInventory().setMaxStackSize(1);
-
-						return true;
-					}
-
+				}
+				else{
+					sender.sendMessage("§cYou have already joined the game!");
+					return true;
 				}
 			}
 			else{
-				sender.sendMessage("§cYou have already joined the game!");
+				sender.sendMessage("§cNo pregame is running right now!");
 				return true;
 			}
+
+
 		}
 		/*
 		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
+			boolean v = SettlersEventListener.shouldBuild;
 			return true;
 		}
 		/*
@@ -106,7 +119,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				else{
 					sender.sendMessage("§cNo one is playing with "+color+" yet");
 				}
-				
+
 				return true;
 			}
 		}
@@ -137,6 +150,11 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				}
 				return true;
 			}
+		}
+		if(cmd.getName().equalsIgnoreCase("newgame")){
+			io.setGameStatus(true);
+			sender.sendMessage("Game created!");
+			return true;
 		}
 		return false;
 	}
@@ -228,7 +246,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("black")){
 			snd.sendMessage("You are now playing with color §0black");
 		}
-		
+
 
 	}
 	public void setColorInUse(String color){
@@ -291,6 +309,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return null;
 	}
+
+
 
 
 

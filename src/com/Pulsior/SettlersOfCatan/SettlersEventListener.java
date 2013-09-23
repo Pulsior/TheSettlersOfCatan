@@ -21,7 +21,7 @@ public class SettlersEventListener implements Listener{
 	private SettlersOfCatan main;
 	SettlerFileIO io = new SettlerFileIO();
 
-	boolean shouldBuild = false;
+	public static boolean shouldBuild = false;
 	StructureGen gen = new StructureGen();
 
 	SettlersCommandExecutor c = new SettlersCommandExecutor();
