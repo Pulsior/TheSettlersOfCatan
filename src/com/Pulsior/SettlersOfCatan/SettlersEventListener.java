@@ -18,7 +18,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class SettlersEventListener implements Listener{
 
 
-	private SettlersOfCatan main;
+	
 	SettlerFileIO io = new SettlerFileIO();
 
 	public static boolean shouldBuild = false;

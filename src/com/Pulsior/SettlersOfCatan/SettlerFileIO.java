@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class SettlerFileIO {
 
 	boolean dataFileExists = false;
+	boolean cardDataFileExists = false;
 	/*
 	 * Writes names and team colors to "SettlersOfCatanPlayers.txt"
 	 */
@@ -32,7 +33,7 @@ public class SettlerFileIO {
 		}
 		return true;
 	}
-	
+
 	/*
 	 * Reads out the "SetlersOfCatanPlayers.txt" file and stores the acquired data in an String[] array.
 	 */
@@ -58,7 +59,7 @@ public class SettlerFileIO {
 		}
 		return null; //Return null if everything failed...
 	}
-	
+
 	public boolean setGameStatus(boolean status){
 		try{
 			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/GameStatus"));
@@ -71,26 +72,31 @@ public class SettlerFileIO {
 		}
 		return true;
 	}
-	
+
+
+
 	public boolean getGameStatus(){
 		try{
 			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/GameStatus"));
 			String ip = input.readLine();
+			input.close();
 			if(ip.equalsIgnoreCase("true")){
 				return true;
 			}
 		}
 		catch(IOException ex){
-			
+
 		}
 		return false;
 	}
 	
+
 	public void makeDir(){
 		File dataFolder = new File("plugins/Settlers Of Catan");
 		if(! (dataFolder.exists() ) ){
 			dataFolder.mkdir();
 		}
 	}
-	
+
+
 }

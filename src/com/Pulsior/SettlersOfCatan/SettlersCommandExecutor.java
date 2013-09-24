@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 /**
  * The CommandExecutor class, where much of the magic happens. To prevent class data transition errors,
@@ -104,7 +103,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			boolean v = SettlersEventListener.shouldBuild;
+			
 			return true;
 		}
 		/*

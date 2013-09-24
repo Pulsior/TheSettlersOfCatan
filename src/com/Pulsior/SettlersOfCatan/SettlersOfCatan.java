@@ -1,7 +1,7 @@
 package com.Pulsior.SettlersOfCatan;
 
-import java.io.File;
-
+import org.bukkit.Bukkit;
+import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -29,6 +29,9 @@ public final class SettlersOfCatan extends JavaPlugin{
 		
 		//Create folder to store files
 		io.makeDir();
+		
+		//New world
+		Bukkit.getServer().createWorld(new WorldCreator("soc"));
 		
 		
 		

@@ -94,6 +94,8 @@ public class IngameTrade {
 			player.sendMessage("§cYou are missing the required materials");
 		}
 	}
+
+
 	/**
 	 * Util method to get needed ItemStacks out of one's inventory
 	 * @param inv
@@ -129,4 +131,6 @@ public class IngameTrade {
 		return 0;
 
 	}
+
+
 }
