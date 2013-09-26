@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Pulsior.SettlersOfCatan.game.CatanGame;
 import com.Pulsior.SettlersOfCatan.game.PreGame;
 
 /**
@@ -32,7 +33,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean black = false;
 	boolean green = false;
 	boolean game;
-	PreGame pregame;
+	public static PreGame pregame;
+	CatanGame c;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -158,6 +160,13 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Bukkit.broadcastMessage("§eA new Settlers of Catan game has been created. Use /join to join the game!");
 			return true;
 		}
+		
+		if(cmd.getName().equalsIgnoreCase("launchgame")){
+			c = new CatanGame();
+			Bukkit.broadcastMessage("§eThe game has been launched!");
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -220,16 +229,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return false;
 	}
-	/**
-	 * Fills the joinedPlayers array with null values, to avoid exceptions when reading the array data.
-	 * Deprecated, but preserving it for future use
-	 */
-	@Deprecated
-	public void flushArray(){
-		for(int i = 0; i < 4; i++){
-			joinedPlayers[i] = null;
-		}
-	}
+	
+	
 	/**
 	 * Sends a simple message to a player with their color of choice
 	 * @param snd
@@ -311,6 +312,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return null;
 	}
+	
+
 
 
 

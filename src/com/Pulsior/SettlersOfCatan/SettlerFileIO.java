@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 /**Class designed for interacting with files, all I/O traffic goes through the SettlerFileIO class
  * 
  * @author Pulsior
@@ -94,20 +97,29 @@ public class SettlerFileIO {
 		return null;
 	}
 
-	public ArrayList<String> getJoinedPlayers(){
+	public Player[] getJoinedPlayers(){
 		boolean readLine = true;
-		ArrayList<String> players = new ArrayList<String>();
+		
+		ArrayList<String> playerNames = new ArrayList<String>();
 		try{
 			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/Players.txt"));
-			while(!(input.readLine().equals(null))){
-				String line = input.readLine();
+			String line = input.readLine();
+			while(line != null){
 				if(readLine){
-					players.add(line);
+					playerNames.add(line);
+					readLine = !(readLine);
 				}
-				readLine = !(readLine);
+				line = input.readLine();
+				
+				
 			}
 		input.close();
+		Player[] players = new Player[playerNames.size()];
+		for(int x = 0; playerNames.size() > x; x++ ){
+			players[x] = Bukkit.getServer().getPlayer(playerNames.get(x));
+		}
 		return players;
+	
 
 		}
 		catch(IOException ex){

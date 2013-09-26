@@ -8,7 +8,6 @@ import com.Pulsior.SettlersOfCatan.SettlerFileIO;
 public class PreGame {
 
 	public static boolean preGame = false;
-	public static CatanGame game;
 	
 
 	SettlerFileIO io = new SettlerFileIO();
@@ -32,8 +31,5 @@ public class PreGame {
 
 	}
 
-	public void launchGame(){
-		game = new CatanGame();
-	}
 
 }

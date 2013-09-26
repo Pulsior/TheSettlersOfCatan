@@ -5,6 +5,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+
 
 /**
  * Allows the player to trade in raw materials for useful items
@@ -12,6 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
  *
  */
 public class IngameTrade {
+
 
 	/**
 	 * Let a player trade in resources for a road in his/her personal color
@@ -35,7 +40,9 @@ public class IngameTrade {
 			ItemStack carpets = new ItemStack(Material.CARPET, 6, dataValue);
 			inv.addItem(carpets);
 
-			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a road!");
+			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a road! ");
+
+
 		}
 		else{
 			player.sendMessage("§cYou are missing the required materials");
@@ -66,7 +73,14 @@ public class IngameTrade {
 			is4.setAmount(is4.getAmount()-1);
 			inv.addItem(is4);
 			inv.addItem(new ItemStack(Material.COMMAND, 1));
-			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a settlement!");
+			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a settlement and earned 1 victory point!");
+			Scoreboard board = SettlersOfCatan.board;
+			Objective o = board.getObjective("victory");
+			Score score = o.getScore(player);
+			score.setScore(score.getScore() + 1);
+			SettlersOfCatan.board = board;
+			for (Player player2 : Bukkit.getServer().getOnlinePlayers()) player2.setScoreboard(SettlersOfCatan.board);
+
 		}
 		else{
 			player.sendMessage("§cYou are missing the required materials");
@@ -88,7 +102,15 @@ public class IngameTrade {
 			is2.setAmount(is2.getAmount()-2);
 			inv.addItem(is2);
 			inv.addItem(new ItemStack(Material.BEDROCK));
-			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a city!");
+			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a city and earned another victory point!");
+			Scoreboard board = SettlersOfCatan.board;
+			Objective o = board.getObjective("victory");
+			Score score = o.getScore(player);
+			score.setScore(score.getScore() + 1);
+			SettlersOfCatan.board = board;
+			for (Player player2 : Bukkit.getServer().getOnlinePlayers()) player2.setScoreboard(SettlersOfCatan.board);
+			SettlersOfCatan.board = board;
+
 		}
 		else{
 			player.sendMessage("§cYou are missing the required materials");
