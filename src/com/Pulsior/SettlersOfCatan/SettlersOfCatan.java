@@ -1,7 +1,5 @@
 package com.Pulsior.SettlersOfCatan;
 
-import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -13,7 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class SettlersOfCatan extends JavaPlugin{
 
 	SettlerFileIO io = new SettlerFileIO();
-
+	
+	
 	@Override
 	public void onEnable(){
 		/*
@@ -27,11 +26,6 @@ public final class SettlersOfCatan extends JavaPlugin{
 		getCommand("buy").setExecutor(new SettlersCommandExecutor(this));
 		getServer().getPluginManager().registerEvents(new SettlersEventListener(), this);
 		
-		//Create folder to store files
-		io.makeDir();
-		
-		//New world
-		Bukkit.getServer().createWorld(new WorldCreator("soc"));
 		
 		
 		
@@ -42,6 +36,7 @@ public final class SettlersOfCatan extends JavaPlugin{
 	public void onDisable() {
 		//Nothing yet
 	}
+	
 
 
 	

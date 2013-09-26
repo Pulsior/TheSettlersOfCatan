@@ -60,12 +60,20 @@ public class SettlerFileIO {
 		return null; //Return null if everything failed...
 	}
 
-	public boolean setGameStatus(boolean status){
+
+	public void makeDir(){
+		File dataFolder = new File("plugins/Settlers Of Catan");
+		if(! (dataFolder.exists() ) ){
+			dataFolder.mkdir();
+		}
+	}
+
+	public boolean writeCurrentTurn(String p){
 		try{
-			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/GameStatus"));
-			if(status == true){ output.println("true"); }
-			if(status == false){ output.println("false"); }
+			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/PlayerInTurn"));
+			output.println(p);
 			output.close();
+
 		}
 		catch(IOException ex){
 			return false;
@@ -73,29 +81,40 @@ public class SettlerFileIO {
 		return true;
 	}
 
-
-
-	public boolean getGameStatus(){
+	public String getCurrentTurn(){
 		try{
-			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/GameStatus"));
+			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/PlayerInTurn"));
 			String ip = input.readLine();
 			input.close();
-			if(ip.equalsIgnoreCase("true")){
-				return true;
-			}
+			return ip;
 		}
 		catch(IOException ex){
 
 		}
-		return false;
+		return null;
 	}
-	
 
-	public void makeDir(){
-		File dataFolder = new File("plugins/Settlers Of Catan");
-		if(! (dataFolder.exists() ) ){
-			dataFolder.mkdir();
+	public ArrayList<String> getJoinedPlayers(){
+		boolean readLine = true;
+		ArrayList<String> players = new ArrayList<String>();
+		try{
+			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/Players.txt"));
+			while(!(input.readLine().equals(null))){
+				String line = input.readLine();
+				if(readLine){
+					players.add(line);
+				}
+				readLine = !(readLine);
+			}
+		input.close();
+		return players;
+
 		}
+		catch(IOException ex){
+
+		}
+
+		return null;
 	}
 
 

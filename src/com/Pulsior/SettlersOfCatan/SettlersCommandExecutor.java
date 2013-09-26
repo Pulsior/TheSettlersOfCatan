@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Pulsior.SettlersOfCatan.game.PreGame;
+
 /**
  * The CommandExecutor class, where much of the magic happens. To prevent class data transition errors,
  * most logic can be found in this class as well.
@@ -30,6 +32,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean black = false;
 	boolean green = false;
 	boolean game;
+	PreGame pregame;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -54,7 +57,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Join the Settlers of Catan game with your specified color
 		 */
 		if(cmd.getName().equalsIgnoreCase("join") && args.length == 1) {
-			if(io.getGameStatus()){
+			if(PreGame.preGame){
 				if(isJoined(sender.getName()) == false){
 					//IF the second argument is either red, green, blue or black
 
@@ -151,8 +154,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			}
 		}
 		if(cmd.getName().equalsIgnoreCase("newgame")){
-			io.setGameStatus(true);
-			sender.sendMessage("Game created!");
+			pregame = new PreGame();
+			Bukkit.broadcastMessage("§eA new Settlers of Catan game has been created. Use /join to join the game!");
 			return true;
 		}
 		return false;

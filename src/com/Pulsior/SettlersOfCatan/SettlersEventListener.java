@@ -15,10 +15,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  *
  */
 
+
+
 public class SettlersEventListener implements Listener{
-
-
 	
+	
+	static boolean workAroundBug = false;
+
 	SettlerFileIO io = new SettlerFileIO();
 
 	public static boolean shouldBuild = false;
@@ -34,17 +37,26 @@ public class SettlersEventListener implements Listener{
 		Block block = event.getBlock();
 		if(block.getType().equals(Material.COMMAND)){ //If the block is a command block, a settlement will be built
 			Location loc = block.getLocation();
-			gen.buildSettlement(loc);
+			gen.buildSettlement(loc, colorCheck( getColor(event.getPlayer().getName() ) )) ;
 		}
 		if(block.getType().equals(Material.BEDROCK)){
 			Location loc = block.getLocation();
-			gen.buildCity(loc);
-			
+			Location loc2 = loc;
+			loc2.setY(loc2.getY()-1);
+			if(loc2.getBlock().getType().equals(Material.WOOL)){
+				gen.buildCity(loc, colorCheck( getColor(event.getPlayer().getName() ) ));	
+			}
+			else{
+				event.setCancelled(true);
+				event.getPlayer().sendMessage("§cYou need to build a city on top of an existing village");
+			}
+
+
 		}
 	}
 
 
-	public short colorCheck(String color){
+	public byte colorCheck(String color){
 		if(color.equalsIgnoreCase("red")){return 14;}
 		if(color.equalsIgnoreCase("blue")){return 11;}
 		if(color.equalsIgnoreCase("green")){return 13;}
@@ -69,6 +81,6 @@ public class SettlersEventListener implements Listener{
 	public void setBuild(){
 		shouldBuild = true;
 	}
-	
-	
+
+
 }

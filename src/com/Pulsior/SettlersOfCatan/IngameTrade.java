@@ -48,7 +48,7 @@ public class IngameTrade {
 	 */
 	public void buySettlement(Player player){
 		PlayerInventory inv = player.getInventory();
-		if(inv.contains( 17, 1 ) && inv.contains( 45, 1 ) && inv.contains (296, 1) && inv.contains(35, 1)){ //If the inventory contains one wood, brick, wool and wheat///
+		if(inv.contains( Material.BRICK, 1 ) && inv.contains( Material.LOG, 1 ) && inv.contains (Material.WOOL, 1) && inv.contains(Material.WHEAT, 1)){ //If the inventory contains one wood, brick, wool and wheat///
 			ItemStack is1 = readInventory(inv, Material.LOG, 1) ;
 			ItemStack is2 = readInventory(inv, Material.BRICK, 1) ;
 			ItemStack is3 = readInventory(inv, Material.WOOL, 1) ;
@@ -78,7 +78,7 @@ public class IngameTrade {
 	 */
 	public void buyCity(Player player){
 		PlayerInventory inv = player.getInventory();
-		if(inv.contains(296, 2) && inv.contains(15, 3)){
+		if(inv.contains(Material.WHEAT, 2) && inv.contains(Material.IRON_ORE, 3)){
 			ItemStack is1 = readInventory(inv, Material.IRON_ORE, 3) ;
 			ItemStack is2 = readInventory(inv, Material.WHEAT, 2) ;
 			inv.remove(is1);
