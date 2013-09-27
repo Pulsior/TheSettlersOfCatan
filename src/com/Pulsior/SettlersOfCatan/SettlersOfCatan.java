@@ -13,11 +13,12 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class SettlersOfCatan extends JavaPlugin{
 
 	SettlerFileIO io = new SettlerFileIO();
-	public static Scoreboard board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
+	public static Scoreboard board;
 	
 	
 	@Override
 	public void onEnable(){
+		board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
 		/*
 		 * Register necessary commands and listeners 
 		 */

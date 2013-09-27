@@ -20,6 +20,7 @@ public class SettlerFileIO {
 
 	boolean dataFileExists = false;
 	boolean cardDataFileExists = false;
+	boolean playerFileExists = false;
 	/*
 	 * Writes names and team colors to "SettlersOfCatanPlayers.txt"
 	 */
@@ -36,6 +37,21 @@ public class SettlerFileIO {
 		}
 		return true;
 	}
+	
+	public boolean writePlayerFile(String player){
+		try{
+			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/Players2.txt", playerFileExists));
+			output.println(player);
+			output.close();
+			playerFileExists = true;
+		}
+		catch(IOException ex){
+			return false;
+		}
+		return true;
+	}
+		
+
 
 	/*
 	 * Reads out the "SetlersOfCatanPlayers.txt" file and stores the acquired data in an String[] array.
@@ -99,7 +115,6 @@ public class SettlerFileIO {
 
 	public Player[] getJoinedPlayers(){
 		boolean readLine = true;
-		
 		ArrayList<String> playerNames = new ArrayList<String>();
 		try{
 			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/Players.txt"));
@@ -107,14 +122,13 @@ public class SettlerFileIO {
 			while(line != null){
 				if(readLine){
 					playerNames.add(line);
-					readLine = !(readLine);
-				}
+				}							
+				readLine = !(readLine);
 				line = input.readLine();
-				
-				
 			}
 		input.close();
-		Player[] players = new Player[playerNames.size()];
+		Bukkit.getLogger().info (Integer.toString(playerNames.size() ) );
+		Player[] players = new Player[4];
 		for(int x = 0; playerNames.size() > x; x++ ){
 			players[x] = Bukkit.getServer().getPlayer(playerNames.get(x));
 		}

@@ -16,10 +16,4 @@ public class TeleportToSpawn {
 			players.get(x).teleport(l);
 		}
 	}
-	public TeleportToSpawn(Player p){
-		World w = Bukkit.getServer().getWorld("soc");
-		Location l = new Location(w, -872, 60, -954);
-		p.teleport(l);
-		
-	}
 }

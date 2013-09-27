@@ -1,6 +1,10 @@
 package com.Pulsior.SettlersOfCatan;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +21,7 @@ import com.Pulsior.SettlersOfCatan.game.PreGame;
  */
 public class SettlersCommandExecutor implements CommandExecutor {
 
-
+	
 
 	/*
 	 * Declares necessary variables 
@@ -35,6 +39,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	boolean game;
 	public static PreGame pregame;
 	CatanGame c;
+	public static Player inTurn;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -86,6 +91,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 							setColoredName(args[0], sender);
 							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);
 							//Bukkit.getServer().getPlayer(sender.getName()).getInventory().setMaxStackSize(1);
+							io.writePlayerFile(sender.getName());
+							World w = Bukkit.getServer().getWorld("soc");
+							Location loc = new Location(w, -872, 60, -954);
+							Bukkit.getServer().getPlayer(sender.getName()).teleport(loc);
+
+
 
 							return true;
 						}
@@ -108,7 +119,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			
+
 			return true;
 		}
 		/*
@@ -160,13 +171,13 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Bukkit.broadcastMessage("§eA new Settlers of Catan game has been created. Use /join to join the game!");
 			return true;
 		}
-		
+
 		if(cmd.getName().equalsIgnoreCase("launchgame")){
 			c = new CatanGame();
 			Bukkit.broadcastMessage("§eThe game has been launched!");
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -229,8 +240,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Sends a simple message to a player with their color of choice
 	 * @param snd
@@ -312,7 +323,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return null;
 	}
-	
+
 
 
 
