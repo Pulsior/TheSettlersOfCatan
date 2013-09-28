@@ -28,12 +28,17 @@ commands:
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
    newgame:
-      decription: Start a new Settlers of Catan game
+      description: Start a new Settlers of Catan game
       usage: <command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
    launchgame:
-      decription: Start playing!
+      description: Start playing!
+      usage: <command>
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>
+   endturn:
+      description: End your turn and allow someone else to play
       usage: <command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>

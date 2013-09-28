@@ -1,8 +1,7 @@
 package com.Pulsior.SettlersOfCatan;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -21,7 +20,7 @@ import com.Pulsior.SettlersOfCatan.game.PreGame;
  */
 public class SettlersCommandExecutor implements CommandExecutor {
 
-	
+
 
 	/*
 	 * Declares necessary variables 
@@ -34,12 +33,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	IngameTrade trade = new IngameTrade();
 	boolean red= false;
 	boolean blue = false;
-	boolean black = false;
+	boolean yellow = false;
 	boolean green = false;
 	boolean game;
 	public static PreGame pregame;
 	CatanGame c;
-	public static Player inTurn;
+	int inTurn = 0;
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -59,55 +58,64 @@ public class SettlersCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,	String[] args) {
-		//IF the command equals join AND the command contains one argument AND the sender has not joined  the game yet
+		
 		/*
 		 * Join the Settlers of Catan game with your specified color
 		 */
+		
+		//If the command equals join AND the command contains one argument AND the sender has not joined  the game yet
 		if(cmd.getName().equalsIgnoreCase("join") && args.length == 1) {
-			if(PreGame.preGame){
-				if(isJoined(sender.getName()) == false){
-					//IF the second argument is either red, green, blue or black
-
+			if(PreGame.preGame){ //If a pregame has been launched...
+				if(isJoined(sender.getName()) == false){ //If the sender has not joined the game yet...
+					
+					//If the second argument is either red, green, blue or yellow
 					if(args[0].equalsIgnoreCase("red") ||args[0].equalsIgnoreCase("green") ||args[0].equalsIgnoreCase("blue") ||
-							args[0].equalsIgnoreCase("black")){
-
+							args[0].equalsIgnoreCase("yellow")){
+						
+						//If the color chosen by the player is already in use...
 						if( colorInUse( args[0] ) == true){
 							sender.sendMessage("§cThis color is already in use!");
 							return true;
 						}
+						//If the command is executed from the console...
 						if( !(sender instanceof Player)){
 							sender.sendMessage("Only players can use this command");
 							return true;
 						}
 
 						else{
-							joinedPlayers[amtOfPlayers] = sender.getName();
-							amtOfPlayers = amtOfPlayers + 1;
-							if(io.writeDataFile(sender.getName(), args[0]) == false){
+							joinedPlayers[amtOfPlayers] = sender.getName(); //Add the player's name to the joinedPlayers array
+							ArrayStorage.players[amtOfPlayers] = sender.getName(); //Add the player's name to the joinedPlayers array
+							amtOfPlayers++; //Increase both values by one
+							ArrayStorage.amountOfPlayers++;
+							if(io.writeDataFile(sender.getName(), args[0]) == false){ //Write name and color to a file
 								sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
 							};
-							colorMessage(sender, args[0]);
+							colorMessage(sender, args[0]); //Set color properties
 							setColorInUse(args[0]);
 							setColoredName(args[0], sender);
-							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);
-							//Bukkit.getServer().getPlayer(sender.getName()).getInventory().setMaxStackSize(1);
-							io.writePlayerFile(sender.getName());
-							World w = Bukkit.getServer().getWorld("soc");
+							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);	
+							io.writePlayerFile(sender.getName()); //Write another player file
+							World w = Bukkit.getServer().getWorld("soc"); //Teleport the player to the spawn of the map
 							Location loc = new Location(w, -872, 60, -954);
-							Bukkit.getServer().getPlayer(sender.getName()).teleport(loc);
-
-
-
+							Player player = Bukkit.getServer().getPlayer(sender.getName());
+							player.teleport(loc);
+							player.setGameMode(GameMode.ADVENTURE);
+							player.setAllowFlight(true);
+							player.sendMessage("You can fly now!");
 							return true;
 						}
 
 					}
 				}
+				
+				//Message sent when a player has already joined
 				else{
 					sender.sendMessage("§cYou have already joined the game!");
 					return true;
 				}
 			}
+			//Message sent when PreGame has not yet been instantiated
 			else{
 				sender.sendMessage("§cNo pregame is running right now!");
 				return true;
@@ -116,10 +124,11 @@ public class SettlersCommandExecutor implements CommandExecutor {
 
 		}
 		/*
-		 * Debug command used sometimes. Not featured in the plugin.yml in releases, thus impossible to use
+		 * Debug command used sometimes. Not featured in the plugin.yml and main class in releases, 
+		 * thus impossible to use for a normal user
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-
+			
 			return true;
 		}
 		/*
@@ -138,6 +147,9 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				return true;
 			}
 		}
+		/*
+		 * Let the player get the color of another player
+		 */
 		if(cmd.getName().equalsIgnoreCase("whichcoloris")){
 			if(args.length == 1){
 				String playerName = args[0];
@@ -150,34 +162,65 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				return true;
 			}
 		}
+		
+		/*
+		 * Trade resources for settlements, roads or cities
+		 */
 		if(cmd.getName().equalsIgnoreCase("buy")){
-			Player player = Bukkit.getServer().getPlayer(sender.getName());
-			if(args.length == 1){
-				if( args[0].equalsIgnoreCase("settlement") ){
-					trade.buySettlement(player);
-				}
-				if( args[0].equalsIgnoreCase("city")){
-					trade.buyCity(player);
-				}
-				if( args [0].equalsIgnoreCase("road")){
-					String color = getColor(player.getName() );
-					trade.buyRoad(player, color);
+			if(sender.getName().equalsIgnoreCase(ArrayStorage.players[ArrayStorage.inTurn])){
+				Player player = Bukkit.getServer().getPlayer(sender.getName());
+				if(args.length == 1){
+					if( args[0].equalsIgnoreCase("settlement") ){
+						trade.buySettlement(player);
+					}
+					if( args[0].equalsIgnoreCase("city")){
+						trade.buyCity(player);
+					}
+					if( args [0].equalsIgnoreCase("road")){
+						String color = getColor(player.getName() );
+						trade.buyRoad(player, color);
+					}
+					return true;
 				}
 				return true;
 			}
+			else{
+				sender.sendMessage("It is not your turn!");
+				if(args.length != 0){
+				return true;
+				}
+			}
 		}
+		/*
+		 * Creates a pregame in which players can join,
+		 * by instantiating game.PreGame
+		 */
 		if(cmd.getName().equalsIgnoreCase("newgame")){
 			pregame = new PreGame();
+			Bukkit.getLogger().info(sender.getName()+" created a new game"); //Log who created a new game
 			Bukkit.broadcastMessage("§eA new Settlers of Catan game has been created. Use /join to join the game!");
 			return true;
 		}
-
+		
+		/*
+		 * Launches the game by instantiating game.CatanGame
+		 */
 		if(cmd.getName().equalsIgnoreCase("launchgame")){
 			c = new CatanGame();
+			Bukkit.getLogger().info("Starting a new game with "+Integer.toString(ArrayStorage.amountOfPlayers)+ " players"); //Log that a game has been started
 			Bukkit.broadcastMessage("§eThe game has been launched!");
+			
 			return true;
 		}
-
+		
+		/*
+		 * Let a player end his/her turn, allowing the next player to make a move
+		 */
+		if(cmd.getName().equalsIgnoreCase("endturn")){
+			endTurn();
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -213,10 +256,15 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if( color.equalsIgnoreCase("blue") ){
 			blue = true;
 		}
-		if( color.equalsIgnoreCase("black") ){
-			black = true;
+		if( color.equalsIgnoreCase("yellow") ){
+			yellow = true;
 		}
 	}
+	/**
+	 * Method to verify whether a color is used by someone else
+	 * @param color
+	 * @return
+	 */
 	public boolean colorInUse(String color){
 		if(color.equalsIgnoreCase("red")){
 			if(red == false){}
@@ -233,9 +281,9 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			if(green == true)
 			{return true;}
 		}
-		if(color.equalsIgnoreCase("black")){
-			if(black == false){}
-			if(black == true)
+		if(color.equalsIgnoreCase("yellow")){
+			if(yellow == false){}
+			if(yellow == true)
 			{return true;}
 		}
 		return false;
@@ -257,8 +305,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("blue")){
 			snd.sendMessage("You are now playing with color §1blue");
 		}
-		if(color.equalsIgnoreCase("black")){
-			snd.sendMessage("You are now playing with color §0black");
+		if(color.equalsIgnoreCase("yellow")){
+			snd.sendMessage("You are now playing with color §6yellow");
 		}
 
 
@@ -267,7 +315,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(color.equalsIgnoreCase("red")){red = true;}
 		if(color.equalsIgnoreCase("blue")){blue = true;}
 		if(color.equalsIgnoreCase("green")){green = true;}
-		if(color.equalsIgnoreCase("black")){black = true;}
+		if(color.equalsIgnoreCase("yellow")){yellow = true;}
 	}
 	/**
 	 * Alters the name of a player so his/her team color can be seen in the chat	
@@ -277,16 +325,20 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	public void setColoredName(String color, CommandSender snd){
 		Player player = Bukkit.getServer().getPlayer(snd.getName());
 		if(color.equalsIgnoreCase("red") ){
-			player.setDisplayName("§4"+player.getName());	
+			player.setDisplayName("§4"+player.getName());
+			player.setPlayerListName("§4"+player.getName());
 		}
 		if(color.equalsIgnoreCase("green") ){
-			player.setDisplayName("§2"+player.getName());	
+			player.setDisplayName("§2"+player.getName());
+			player.setPlayerListName("§2"+player.getName());
 		}
 		if(color.equalsIgnoreCase("blue") ){
-			player.setDisplayName("§1"+player.getName());	
+			player.setDisplayName("§1"+player.getName());
+			player.setPlayerListName("§1"+player.getName());
 		}
-		if(color.equalsIgnoreCase("black") ){
-			player.setDisplayName("§0"+player.getName());	
+		if(color.equalsIgnoreCase("yellow") ){
+			player.setDisplayName("§6"+player.getName());
+			player.setPlayerListName("§6"+player.getName());
 		}
 	}
 	/**
@@ -323,6 +375,20 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		}
 		return null;
 	}
+
+	public void endTurn(){
+		Bukkit.broadcastMessage(Bukkit.getServer().getPlayer(ArrayStorage.players[ArrayStorage.inTurn]).getDisplayName() +"§f ended his turn!");
+		if(ArrayStorage.inTurn < ArrayStorage.amountOfPlayers-1){
+			ArrayStorage.inTurn = ArrayStorage.inTurn+1;
+		}
+		else{
+			ArrayStorage.inTurn = 0;
+		}
+		Bukkit.broadcastMessage("It is now "+Bukkit.getServer().getPlayer(ArrayStorage.players[ArrayStorage.inTurn]).getDisplayName()+ "'s §fturn!");
+		
+	}
+
+
 
 
 

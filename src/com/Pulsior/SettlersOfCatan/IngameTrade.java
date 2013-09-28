@@ -60,9 +60,9 @@ public class IngameTrade {
 			ItemStack is2 = readInventory(inv, Material.BRICK, 1) ;
 			ItemStack is3 = readInventory(inv, Material.WOOL, 1) ;
 			ItemStack is4 = readInventory(inv, Material.WHEAT, 1) ;
-			inv.remove(is1);
-			is1.setAmount(is1.getAmount()-1);
-			inv.addItem(is1);
+			inv.remove(is1); //Remove the stack from the inventory
+			is1.setAmount(is1.getAmount()-1); //Subtract one item from the ItemStack
+			inv.addItem(is1); //Return the stack to the inventory
 			inv.remove(is2);
 			is2.setAmount(is2.getAmount()-1);
 			inv.addItem(is2);
@@ -72,14 +72,14 @@ public class IngameTrade {
 			inv.remove(is4);
 			is4.setAmount(is4.getAmount()-1);
 			inv.addItem(is4);
-			inv.addItem(new ItemStack(Material.COMMAND, 1));
+			inv.addItem(new ItemStack(Material.COMMAND, 1)); //Give the player a command block
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a settlement and earned 1 victory point!");
 			Scoreboard board = SettlersOfCatan.board;
-			Objective o = board.getObjective("victory");
+			Objective o = board.getObjective("victory"); //Add a victory point to the player's score
 			Score score = o.getScore(player);
 			score.setScore(score.getScore() + 1);
 			SettlersOfCatan.board = board;
-			for (Player player2 : Bukkit.getServer().getOnlinePlayers()) player2.setScoreboard(SettlersOfCatan.board);
+			for (Player player2 : Bukkit.getServer().getOnlinePlayers()) player2.setScoreboard(SettlersOfCatan.board); //Update the scoreboard
 
 		}
 		else{
@@ -101,7 +101,7 @@ public class IngameTrade {
 			inv.remove(is2);
 			is2.setAmount(is2.getAmount()-2);
 			inv.addItem(is2);
-			inv.addItem(new ItemStack(Material.BEDROCK));
+			inv.addItem(new ItemStack(Material.BEDROCK)); //Give the player one piece of bedrock
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a city and earned another victory point!");
 			Scoreboard board = SettlersOfCatan.board;
 			Objective o = board.getObjective("victory");
@@ -119,7 +119,7 @@ public class IngameTrade {
 
 
 	/**
-	 * Util method to get needed ItemStacks out of one's inventory
+	 * Utility method to get needed ItemStacks out of one's inventory
 	 * @param inv
 	 * @param wishedMaterial
 	 * @param wishedSize
@@ -149,7 +149,7 @@ public class IngameTrade {
 		if(color.equalsIgnoreCase("red")){return 14;}
 		if(color.equalsIgnoreCase("blue")){return 11;}
 		if(color.equalsIgnoreCase("green")){return 13;}
-		if(color.equalsIgnoreCase("black")){return 15;}
+		if(color.equalsIgnoreCase("yellow")){return 4;}
 		return 0;
 
 	}

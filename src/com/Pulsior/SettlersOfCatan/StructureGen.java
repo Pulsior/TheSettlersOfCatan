@@ -9,7 +9,7 @@ import org.bukkit.Material;
  * @author Pulsior
  *
  */
-@SuppressWarnings("deprecation")
+
 public class StructureGen {
 	
 	

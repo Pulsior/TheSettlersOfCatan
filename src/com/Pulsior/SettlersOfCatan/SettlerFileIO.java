@@ -38,6 +38,11 @@ public class SettlerFileIO {
 		return true;
 	}
 	
+	/**
+	 * Write the names of newly joined players to a file
+	 * @param player
+	 * @return
+	 */
 	public boolean writePlayerFile(String player){
 		try{
 			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/Players2.txt", playerFileExists));
@@ -53,7 +58,7 @@ public class SettlerFileIO {
 		
 
 
-	/*
+	/**
 	 * Reads out the "SetlersOfCatanPlayers.txt" file and stores the acquired data in an String[] array.
 	 */
 	public String[] readDataFile(){
@@ -86,33 +91,11 @@ public class SettlerFileIO {
 			dataFolder.mkdir();
 		}
 	}
-
-	public boolean writeCurrentTurn(String p){
-		try{
-			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/PlayerInTurn"));
-			output.println(p);
-			output.close();
-
-		}
-		catch(IOException ex){
-			return false;
-		}
-		return true;
-	}
-
-	public String getCurrentTurn(){
-		try{
-			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/PlayerInTurn"));
-			String ip = input.readLine();
-			input.close();
-			return ip;
-		}
-		catch(IOException ex){
-
-		}
-		return null;
-	}
-
+	
+	/**
+	 * Returns an array of all joined players
+	 * @return
+	 */
 	public Player[] getJoinedPlayers(){
 		boolean readLine = true;
 		ArrayList<String> playerNames = new ArrayList<String>();

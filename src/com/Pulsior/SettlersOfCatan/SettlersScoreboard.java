@@ -26,23 +26,25 @@ public class SettlersScoreboard {
 		Objective objective = SettlersOfCatan.board.registerNewObjective("victory", "dummy");
 		Player[] players = io.getJoinedPlayers();
 		settlers.addPlayer(players[0]);
-		settlers.addPlayer(players[1]);
-		settlers.addPlayer(players[2]);
-		//settlers.addPlayer(players[3]);
+		if(players[1] != null){settlers.addPlayer(players[1]);}
+		if(players[2] != null){settlers.addPlayer(players[2]);}
+		if(players[3] != null){settlers.addPlayer(players[3]);}
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		objective.setDisplayName("Victory points");
 		Score score = objective.getScore(players[0]);
 		score.setScore(0);
-		score = objective.getScore(players[1]);
+		if(players[1] != null){score = objective.getScore(players[1]);}
 		score.setScore(0);
-		score = objective.getScore(players[2]);
+		if(players[2] != null){score = objective.getScore(players[2]);}
 		score.setScore(0);
-		//objective.getScore(players[3]);
+		if(players[3] != null){score = objective.getScore(players[3]);}
+		score.setScore(0);
+		
 		
 		players[0].setScoreboard(SettlersOfCatan.board);
-		players[1].setScoreboard(SettlersOfCatan.board);
-		players[2].setScoreboard(SettlersOfCatan.board);
-		//if(players[3] != null){players[3].setScoreboard(SettlersOfCatan.board);}
+		if(players[1] != null){players[1].setScoreboard(SettlersOfCatan.board);}
+		if(players[2] != null){players[2].setScoreboard(SettlersOfCatan.board);}
+		if(players[3] != null){players[3].setScoreboard(SettlersOfCatan.board);}
 		Bukkit.getLogger().info("Done setting up the scoreboard!");
 		
 

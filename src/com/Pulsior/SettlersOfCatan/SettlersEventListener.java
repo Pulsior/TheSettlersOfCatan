@@ -9,8 +9,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 /**
- * Simple EventListener to make all chat messages white.
- * Chat messages will have the team color of their sender otherwise
+ * Multi-purpose EventListener:
+ * 	- To intercept chat messages and make them white, for the messages would have the color of their sender otherwise
+ *  - To detect whenever bedrock or command blocks are placed, and to turn them into structures
  * @author Pulsior
  *
  */
@@ -20,11 +21,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class SettlersEventListener implements Listener{
 	
 	
-	static boolean workAroundBug = false;
-
 	SettlerFileIO io = new SettlerFileIO();
 
-	public static boolean shouldBuild = false;
 	StructureGen gen = new StructureGen();
 
 	SettlersCommandExecutor c = new SettlersCommandExecutor();
@@ -39,11 +37,11 @@ public class SettlersEventListener implements Listener{
 			Location loc = block.getLocation();
 			gen.buildSettlement(loc, colorCheck( getColor(event.getPlayer().getName() ) )) ;
 		}
-		if(block.getType().equals(Material.BEDROCK)){
+		if(block.getType().equals(Material.BEDROCK)){ //If the block is bedrock, a city will be built
 			Location loc = block.getLocation();
 			Location loc2 = loc;
 			loc2.setY(loc2.getY()-1);
-			if(loc2.getBlock().getType().equals(Material.WOOL)){
+			if(loc2.getBlock().getType().equals(Material.WOOL)){ //But only if the block beneath is wool
 				gen.buildCity(loc, colorCheck( getColor(event.getPlayer().getName() ) ));	
 			}
 			else{
@@ -60,7 +58,7 @@ public class SettlersEventListener implements Listener{
 		if(color.equalsIgnoreCase("red")){return 14;}
 		if(color.equalsIgnoreCase("blue")){return 11;}
 		if(color.equalsIgnoreCase("green")){return 13;}
-		if(color.equalsIgnoreCase("black")){return 15;}
+		if(color.equalsIgnoreCase("yellow")){return 4;}
 		return 0;
 
 	}
@@ -76,10 +74,6 @@ public class SettlersEventListener implements Listener{
 
 		}
 		return null;
-	}
-
-	public void setBuild(){
-		shouldBuild = true;
 	}
 
 
