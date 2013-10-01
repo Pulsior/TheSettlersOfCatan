@@ -1,12 +1,19 @@
 package com.Pulsior.SettlersOfCatan;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Multi-purpose EventListener:
@@ -19,17 +26,18 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 
 public class SettlersEventListener implements Listener{
-	
-	
+
+
 	SettlerFileIO io = new SettlerFileIO();
-
+	SurfaceRecognition recog = new SurfaceRecognition();
 	StructureGen gen = new StructureGen();
-
 	SettlersCommandExecutor c = new SettlersCommandExecutor();
+
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		event.setMessage("§f"+event.getMessage() );		
 	}
+
 	@EventHandler
 	public void onPlayerBuild(BlockPlaceEvent event){
 		Block block = event.getBlock();
@@ -40,18 +48,34 @@ public class SettlersEventListener implements Listener{
 		if(block.getType().equals(Material.BEDROCK)){ //If the block is bedrock, a city will be built
 			Location loc = block.getLocation();
 			Location loc2 = loc;
+			Player player = event.getPlayer();
 			loc2.setY(loc2.getY()-1);
 			if(loc2.getBlock().getType().equals(Material.WOOL)){ //But only if the block beneath is wool
-				gen.buildCity(loc, colorCheck( getColor(event.getPlayer().getName() ) ));	
+				gen.buildCity(loc, colorCheck( getColor(player.getName() ) ), player);	
 			}
 			else{
 				event.setCancelled(true);
-				event.getPlayer().sendMessage("§cYou need to build a city on top of an existing village");
+				player.sendMessage("§cYou need to build a city on top of an existing village");
 			}
-
-
 		}
+		
 	}
+	/**
+	 * If a player clicks a spot with a blaze rod, the resources of surrounding spaces are logged to the console
+	 * @param event
+	 */
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event){
+		Block block = event.getClickedBlock();
+		if(event.getItem() != null){
+			if(event.getItem().equals(new ItemStack(Material.BLAZE_ROD))){
+				recog.recognize(block.getLocation());
+			}
+		}
+
+	}
+
+
 
 
 	public byte colorCheck(String color){
@@ -72,6 +96,16 @@ public class SettlersEventListener implements Listener{
 				return namesAndColors[x+1];
 			}
 
+		}
+		return null;
+	}
+
+	public Object getMetadata(Block block, String key, Plugin plugin){
+		List<MetadataValue> values = block.getMetadata(key);  
+		for(MetadataValue value : values){
+			if(value.getOwningPlugin().getDescription().getName().equals(plugin.getDescription().getName())){
+				return value.value();
+			}
 		}
 		return null;
 	}

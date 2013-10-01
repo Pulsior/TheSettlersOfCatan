@@ -1,4 +1,4 @@
-package com.Pulsior.SettlersOfCatan;
+package com.Pulsior.SettlersOfCatan.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,6 +8,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+
+import com.Pulsior.SettlersOfCatan.SettlersOfCatan;
 
 
 /**

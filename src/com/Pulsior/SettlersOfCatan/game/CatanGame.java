@@ -4,7 +4,6 @@ package com.Pulsior.SettlersOfCatan.game;
 import org.bukkit.entity.Player;
 
 import com.Pulsior.SettlersOfCatan.SettlerFileIO;
-import com.Pulsior.SettlersOfCatan.SettlersScoreboard;
 
 
 public class CatanGame {
@@ -15,12 +14,16 @@ public class CatanGame {
 	SettlerFileIO io = new SettlerFileIO();
 	Player[] players;
 	SettlersScoreboard scoreboard;
+	public static boolean launched = false;
 
 	public CatanGame(){
 
 		//Instantiate the SettlerScoreBoard
 		new SettlersScoreboard();
+		launched = true;
 		
 	}
+	
+	
 
 }

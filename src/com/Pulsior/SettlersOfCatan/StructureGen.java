@@ -2,10 +2,11 @@ package com.Pulsior.SettlersOfCatan;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 /**
  * Generates cities and settlements. This code is really long and cumbersome
- * since Bukkit seems to hate for loops
+ * since Bukkit seems to hate for-loops
  * @author Pulsior
  *
  */
@@ -13,7 +14,7 @@ import org.bukkit.Material;
 public class StructureGen {
 	
 	
-	public void buildCity(Location loc, byte data){
+	public void buildCity(Location loc, byte data, Player player){
 		loc.setY(loc.getY()-1);
 		loc.getBlock().setType(Material.STONE);
 		loc.setX(loc.getX()+1);

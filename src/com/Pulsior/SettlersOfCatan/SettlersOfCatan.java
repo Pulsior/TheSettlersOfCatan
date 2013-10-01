@@ -14,6 +14,7 @@ public final class SettlersOfCatan extends JavaPlugin{
 
 	SettlerFileIO io = new SettlerFileIO();
 	public static Scoreboard board;
+	public static SettlersOfCatan plugin = new SettlersOfCatan();
 	
 	
 	@Override
@@ -31,26 +32,14 @@ public final class SettlersOfCatan extends JavaPlugin{
 		getCommand("check").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("buy").setExecutor(new SettlersCommandExecutor(this));
 		getServer().getPluginManager().registerEvents(new SettlersEventListener(), this);
-		
-
-		
-		
-		
-		
+				
 		
 	}
 
 	@Override
 	public void onDisable() {
-		//Nothing yet
+		
 	}
-	
-
-
-	
-	
-	
-	
 	
 
 

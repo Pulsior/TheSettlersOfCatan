@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.Pulsior.SettlersOfCatan.game.CatanGame;
+import com.Pulsior.SettlersOfCatan.game.Dice;
+import com.Pulsior.SettlersOfCatan.game.IngameTrade;
 import com.Pulsior.SettlersOfCatan.game.PreGame;
 
 /**
@@ -25,6 +27,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	/*
 	 * Declares necessary variables 
 	 */
+	Dice dice = new Dice();
 	@SuppressWarnings("unused")
 	private SettlersOfCatan main;
 	private String[] joinedPlayers = new String[4];
@@ -128,7 +131,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * thus impossible to use for a normal user
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			
+			io.readNumbers();
 			return true;
 		}
 		/*
@@ -209,6 +212,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			c = new CatanGame();
 			Bukkit.getLogger().info("Starting a new game with "+Integer.toString(ArrayStorage.amountOfPlayers)+ " players"); //Log that a game has been started
 			Bukkit.broadcastMessage("§eThe game has been launched!");
+			dice.roll();
+			Bukkit.broadcastMessage(Bukkit.getServer().getPlayer(ArrayStorage.players[0]).getDisplayName() + " §frolled §c"+ Integer.toString( Dice.lastValue )+"§f!" );
 			
 			return true;
 		}
@@ -220,7 +225,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			endTurn();
 			return true;
 		}
-		
 		return false;
 	}
 
@@ -303,10 +307,10 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			snd.sendMessage("You are now playing with color §2green");
 		}
 		if(color.equalsIgnoreCase("blue")){
-			snd.sendMessage("You are now playing with color §1blue");
+			snd.sendMessage("You are now playing with color §9blue");
 		}
 		if(color.equalsIgnoreCase("yellow")){
-			snd.sendMessage("You are now playing with color §6yellow");
+			snd.sendMessage("You are now playing with color §eyellow");
 		}
 
 
@@ -333,12 +337,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			player.setPlayerListName("§2"+player.getName());
 		}
 		if(color.equalsIgnoreCase("blue") ){
-			player.setDisplayName("§1"+player.getName());
-			player.setPlayerListName("§1"+player.getName());
+			player.setDisplayName("§9"+player.getName());
+			player.setPlayerListName("§9"+player.getName());
 		}
 		if(color.equalsIgnoreCase("yellow") ){
-			player.setDisplayName("§6"+player.getName());
-			player.setPlayerListName("§6"+player.getName());
+			player.setDisplayName("§e"+player.getName());
+			player.setPlayerListName("§e"+player.getName());
 		}
 	}
 	/**
@@ -384,7 +388,11 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		else{
 			ArrayStorage.inTurn = 0;
 		}
-		Bukkit.broadcastMessage("It is now "+Bukkit.getServer().getPlayer(ArrayStorage.players[ArrayStorage.inTurn]).getDisplayName()+ "'s §fturn!");
+		dice.roll();
+		int result = Dice.lastValue;
+		String playerName = Bukkit.getServer().getPlayer(ArrayStorage.players[ArrayStorage.inTurn]).getDisplayName();
+		Bukkit.broadcastMessage("It is now "+playerName+ "'s §fturn!");
+		Bukkit.broadcastMessage(playerName + " §frolled §c"+ Integer.toString( result )+"§f!" );
 		
 	}
 
