@@ -8,36 +8,54 @@ import org.bukkit.Material;
 
 
 public class SurfaceRecognition {
-
-	SpaceValues sv = new SpaceValues();
 	
+	SpaceValues sv = new SpaceValues();
 	Logger log = Bukkit.getLogger();
 
 	public Location newLoc(Location loc){
 		return new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 	}
 	
-	public void recognize(Location loc){
+	/**
+	 * Return an array of spaces which can be claimed by the player
+	 * @param loc
+	 * @return
+	 */
+	public BoardSpace[] recognize(Location loc){
+		loc.setY(loc.getY()-1);
+		BoardSpace[] spaces = new BoardSpace[4];
+		
 		Location nLoc = newLoc(loc);
 		nLoc.setZ(nLoc.getZ()-7);
-		log.info("North: "+getString(nLoc));
+		Resource northResource = getResource(nLoc);
+		log.info("North: "+northResource);
+		spaces[0] = new BoardSpace(northResource, nLoc, sv.getNumber(northResource, nLoc));
+		
 		Location eLoc = newLoc(loc);
 		eLoc.setX(eLoc.getX()+7);
-		log.info("East: "+getString(eLoc));
+		Resource eastResource = getResource(eLoc);
+		log.info("East: "+eastResource);
+		spaces[1] = new BoardSpace(eastResource, eLoc, sv.getNumber(eastResource, eLoc));
+		
 		Location sLoc = newLoc(loc);
 		sLoc.setZ(sLoc.getZ()+7);
-		log.info("South: "+getString(sLoc));
+		Resource southResource = getResource(sLoc);
+		log.info("South: "+southResource);
+		spaces[2] = new BoardSpace(southResource, sLoc, sv.getNumber(southResource, sLoc));
+		
 		Location wLoc = newLoc(loc);
 		wLoc.setX(wLoc.getX()-7);
-		log.info("West: "+ getString(wLoc));
-				
+		Resource westResource  = getResource(wLoc);
+		log.info("West: "+ westResource);
+		spaces[3] = new BoardSpace(westResource, sLoc, sv.getNumber(westResource, wLoc));
+		return spaces;
 	}
 	
-	public String getString(Location loc){
+	public Resource getResource(Location loc){
 		if(! (loc.getBlock().getType().equals(Material.SOIL) ) ){
 			loc.setX(loc.getX()+1);
 			if(loc.getBlock().getType().equals(Material.SOIL)){
-				return "WHEAT " + sv.getNumber(Resource.WHEAT, loc);
+				return Resource.WHEAT;
 			}
 			else{
 				loc.setX(loc.getX()-1);
@@ -45,32 +63,32 @@ public class SurfaceRecognition {
 		}
 		
 		if(loc.getBlock().getType().equals(Material.STONE) || loc.getBlock().getType().equals(Material.IRON_ORE)){
-			return "ORE " + sv.getNumber(Resource.ORE, loc);
+			return Resource.ORE;
 		}
 		if(loc.getBlock().getType().equals(Material.STAINED_CLAY) || loc.getBlock().getType().equals(Material.COBBLESTONE)){
-			return "BRICK " + sv.getNumber(Resource.BRICKS, loc);
+			return Resource.BRICKS;
 		}
 		if(loc.getBlock().getType().equals(Material.WATER)){
 			loc.setX(loc.getX()+1);
 			if(loc.getBlock().getType().equals(Material.WATER)){
 				loc.setZ(loc.getZ()+1);
 				if(loc.getBlock().getType().equals(Material.WATER)){
-					return "SEA";
+					return null;
 				}
 				else{
 					if(loc.getBlock().getType().equals(Material.SOIL)){
-						return "WHEAT " + sv.getNumber(Resource.WHEAT, loc);
+						return Resource.WHEAT;
 					}
 				}
 			}
 			else{
 				if(loc.getBlock().getType().equals(Material.SOIL)){
-					return "WHEAT " + sv.getNumber(Resource.WHEAT, loc);
+					return Resource.WHEAT;
 				}
 			}
 		}
 		if(loc.getBlock().getType().equals(Material.SOIL)){
-			return "WHEAT " + sv.getNumber(Resource.WHEAT, loc);
+			return Resource.WHEAT;
 		}
 		if(loc.getBlock().getType().equals(Material.GRASS)){
 			loc.setY(loc.getY()+4);
@@ -81,25 +99,22 @@ public class SurfaceRecognition {
 			loc3.setY(loc3.getY()-2);
 			loc4.setY(loc4.getY()-3);
 			if(loc.getBlock().getType().equals(Material.LEAVES) || loc.getBlock().getType().equals(Material.LOG) || loc2.getBlock().getType().equals(Material.LEAVES) || loc2.getBlock().getType().equals(Material.LOG) || loc3.getBlock().getType().equals(Material.LEAVES) || loc3.getBlock().getType().equals(Material.LOG) || loc4.getBlock().getType().equals(Material.LEAVES) || loc4.getBlock().getType().equals(Material.LOG)  ){
-				return "WOOD "+ sv.getNumber(Resource.WOOD, loc);
+				return Resource.WOOD;
 			}
 			if(loc.getBlock().getType().equals(Material.AIR)){
-				return "SHEEP " + sv.getNumber(Resource.SHEEP, loc);
+				return Resource.SHEEP;
 			}
 		}
 		if(loc.getBlock().getType().equals(Material.DIRT)){
 			loc.setY(loc.getY()+1);
 			if(loc.getBlock().getType().equals(Material.LOG)){
-				return "WOOD "+ sv.getNumber(Resource.WOOD, loc);
+				return Resource.WOOD;
 			}
-			return "SHEEP " + sv.getNumber(Resource.SHEEP, loc);
+			return Resource.SHEEP;
 			
 			
-		}
-		if(loc.getBlock().getType().equals(Material.SANDSTONE)){
-			return "DESERT";
 		}
 		
-		return "NOTHING FOUND";
+		return Resource.NONE;
 	}
 }

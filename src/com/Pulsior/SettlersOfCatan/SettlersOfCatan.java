@@ -11,7 +11,9 @@ import org.bukkit.scoreboard.Scoreboard;
  */
 
 public final class SettlersOfCatan extends JavaPlugin{
-
+	
+	public static SPlayer[] sPlayers = new SPlayer[4];
+	
 	SettlerFileIO io = new SettlerFileIO();
 	public static Scoreboard board;
 	public static SettlersOfCatan plugin = new SettlersOfCatan();
@@ -38,7 +40,6 @@ public final class SettlersOfCatan extends JavaPlugin{
 
 	@Override
 	public void onDisable() {
-		
 	}
 	
 

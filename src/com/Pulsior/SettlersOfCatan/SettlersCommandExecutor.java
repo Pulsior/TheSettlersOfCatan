@@ -1,5 +1,8 @@
 package com.Pulsior.SettlersOfCatan;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -8,6 +11,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 import com.Pulsior.SettlersOfCatan.game.CatanGame;
 import com.Pulsior.SettlersOfCatan.game.Dice;
@@ -28,7 +34,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	 * Declares necessary variables 
 	 */
 	Dice dice = new Dice();
-	@SuppressWarnings("unused")
 	private SettlersOfCatan main;
 	private String[] joinedPlayers = new String[4];
 	int amtOfPlayers = 0;
@@ -42,6 +47,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	public static PreGame pregame;
 	CatanGame c;
 	int inTurn = 0;
+	Logger l = Bukkit.getLogger();
 
 	/**
 	 * Constructor required for CommandExecutor functions
@@ -61,20 +67,20 @@ public class SettlersCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,	String[] args) {
-		
+
 		/*
 		 * Join the Settlers of Catan game with your specified color
 		 */
-		
+
 		//If the command equals join AND the command contains one argument AND the sender has not joined  the game yet
 		if(cmd.getName().equalsIgnoreCase("join") && args.length == 1) {
 			if(PreGame.preGame){ //If a pregame has been launched...
 				if(isJoined(sender.getName()) == false){ //If the sender has not joined the game yet...
-					
+
 					//If the second argument is either red, green, blue or yellow
 					if(args[0].equalsIgnoreCase("red") ||args[0].equalsIgnoreCase("green") ||args[0].equalsIgnoreCase("blue") ||
 							args[0].equalsIgnoreCase("yellow")){
-						
+
 						//If the color chosen by the player is already in use...
 						if( colorInUse( args[0] ) == true){
 							sender.sendMessage("§cThis color is already in use!");
@@ -106,12 +112,14 @@ public class SettlersCommandExecutor implements CommandExecutor {
 							player.setGameMode(GameMode.ADVENTURE);
 							player.setAllowFlight(true);
 							player.sendMessage("You can fly now!");
+							player.setMetadata("number", new FixedMetadataValue(main, ArrayStorage.amountOfPlayers+1));
+							SettlersOfCatan.sPlayers[ArrayStorage.amountOfPlayers] = new SPlayer(ArrayStorage.amountOfPlayers+1);
 							return true;
 						}
 
 					}
 				}
-				
+
 				//Message sent when a player has already joined
 				else{
 					sender.sendMessage("§cYou have already joined the game!");
@@ -131,7 +139,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * thus impossible to use for a normal user
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			io.readNumbers();
 			return true;
 		}
 		/*
@@ -165,7 +172,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 				return true;
 			}
 		}
-		
+
 		/*
 		 * Trade resources for settlements, roads or cities
 		 */
@@ -190,7 +197,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			else{
 				sender.sendMessage("It is not your turn!");
 				if(args.length != 0){
-				return true;
+					return true;
 				}
 			}
 		}
@@ -204,7 +211,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Bukkit.broadcastMessage("§eA new Settlers of Catan game has been created. Use /join to join the game!");
 			return true;
 		}
-		
+
 		/*
 		 * Launches the game by instantiating game.CatanGame
 		 */
@@ -214,10 +221,10 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Bukkit.broadcastMessage("§eThe game has been launched!");
 			dice.roll();
 			Bukkit.broadcastMessage(Bukkit.getServer().getPlayer(ArrayStorage.players[0]).getDisplayName() + " §frolled §c"+ Integer.toString( Dice.lastValue )+"§f!" );
-			
+
 			return true;
 		}
-		
+
 		/*
 		 * Let a player end his/her turn, allowing the next player to make a move
 		 */
@@ -389,20 +396,54 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			ArrayStorage.inTurn = 0;
 		}
 		dice.roll();
+		l.info("Dice rolled");
 		int result = Dice.lastValue;
 		String playerName = Bukkit.getServer().getPlayer(ArrayStorage.players[ArrayStorage.inTurn]).getDisplayName();
 		Bukkit.broadcastMessage("It is now "+playerName+ "'s §fturn!");
 		Bukkit.broadcastMessage(playerName + " §frolled §c"+ Integer.toString( result )+"§f!" );
 		
+		if(ArrayStorage.players[0] != null){
+			Player player = Bukkit.getServer().getPlayer(ArrayStorage.players[0]);
+			int number = getMetadata(Bukkit.getServer().getPlayer(ArrayStorage.players[0]), "number", SettlersOfCatan.plugin);
+			SPlayer sp = SettlersOfCatan.sPlayers[number-1];
+			sp.giveResources(Dice.lastValue, player );
+			
+		}
+		if(ArrayStorage.players[1] != null){
+			Player player = Bukkit.getServer().getPlayer(ArrayStorage.players[1]);
+			int number = getMetadata(Bukkit.getServer().getPlayer(ArrayStorage.players[1]), "number", SettlersOfCatan.plugin);
+			SPlayer sp = SettlersOfCatan.sPlayers[number];
+			sp.giveResources(Dice.lastValue, player);
+			
+		}
+		if(ArrayStorage.players[2] != null){
+			Player player = Bukkit.getServer().getPlayer(ArrayStorage.players[2]);
+			int number = getMetadata(Bukkit.getServer().getPlayer(ArrayStorage.players[2]), "number", SettlersOfCatan.plugin);
+			SPlayer sp = SettlersOfCatan.sPlayers[number];
+			sp.giveResources(Dice.lastValue, player);
+			
+		}
+		if(ArrayStorage.players[3] != null){
+			Player player = Bukkit.getServer().getPlayer(ArrayStorage.players[3]);
+			int number = getMetadata(Bukkit.getServer().getPlayer(ArrayStorage.players[3]), "number", SettlersOfCatan.plugin);
+			SPlayer sp = SettlersOfCatan.sPlayers[number];
+			sp.giveResources(Dice.lastValue, player);
+			
+		}
 	}
 
 
 
 
 
+	public int getMetadata(Player player, String key, Plugin plugin){
+		List<MetadataValue> values = player.getMetadata(key);  
+		for(MetadataValue value : values){
+			return value.asInt();
 
-
-
+		}
+		return 0;
+	}
 
 }
 

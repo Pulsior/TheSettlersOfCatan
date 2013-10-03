@@ -5,6 +5,7 @@ public enum Resource {
 	ORE,
 	SHEEP,
 	WOOD,
-	WHEAT
+	WHEAT,
+	NONE
 	
 }

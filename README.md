@@ -12,12 +12,12 @@ Implemented features:
   - Colored wool in settlements and cities
   - Turn system
   - Dice system
+  - Automatically give appropriate resources to players
 
 Planned features:
   - Ability to buy development cards
   - Add the robber, deprieving players of resources
   - Coastal trade
-  - Automatically give appropriate resources to players
   - Permissions
 
 Please note that i don't have a Pulsior.com domain, but I used a com.Pulsior package structure

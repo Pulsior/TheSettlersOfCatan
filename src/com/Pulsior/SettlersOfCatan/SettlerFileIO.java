@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -129,15 +126,13 @@ public class SettlerFileIO {
 		return null;
 	}
 	
-	public void readNumbers(){
-		InputStream input = getClass().getResourceAsStream("dev_Settlers.jar/numberAreaValues.txt");
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-			Bukkit.getLogger().info(br.readLine());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+	public void makePlayerFiles(){
+		try{
+			PrintWriter output = new PrintWriter(new FileWriter("plugins/Settlers Of Catan/Players/Player1"));
+			output.close();
+		}
+		catch(IOException ex){
+			
 		}
 	}
 	

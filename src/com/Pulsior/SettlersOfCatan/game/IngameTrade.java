@@ -39,7 +39,7 @@ public class IngameTrade {
 			inv.addItem(is2);
 
 			short dataValue = colorCheck(color);
-			ItemStack carpets = new ItemStack(Material.CARPET, 6, dataValue);
+			ItemStack carpets = new ItemStack(Material.CARPET, 7, dataValue);
 			inv.addItem(carpets);
 
 			Bukkit.broadcastMessage("§6"+player.getName()+" has bought a road! ");
