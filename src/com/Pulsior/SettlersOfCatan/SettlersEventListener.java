@@ -45,7 +45,9 @@ public class SettlersEventListener implements Listener{
 		if(block.getType().equals(Material.COMMAND)){ //If the block is a command block, a settlement will be built
 			Location loc = block.getLocation();
 			gen.buildSettlement(loc, colorCheck( getColor(player.getName() ) )) ;
-			BoardSpace[] spaces = recog.recognize(block.getLocation());
+			Location location = block.getLocation();
+			location.setY(location.getY()-1);
+			BoardSpace[] spaces = recog.recognize(location);
 			SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; //TODO Fix 
 			for(int x = 0; x < 3; x++){
 				BoardSpace space = spaces[x];
@@ -59,7 +61,7 @@ public class SettlersEventListener implements Listener{
 			if(loc2.getBlock().getType().equals(Material.WOOL)){ //But only if the block beneath is wool
 				gen.buildCity(loc, colorCheck( getColor(player.getName() ) ), player);
 				Location location = block.getLocation();
-				location.setY(location.getY()-2);
+				location.setY(location.getY()-3);
 				BoardSpace[] spaces = recog.recognize(location);
 				SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; //TODO Fix 
 				for(int x = 0; x < 3; x++){

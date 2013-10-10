@@ -11,7 +11,7 @@ import org.bukkit.World;
  */
 
 public class SpaceValues {
-	static World world = Bukkit.getServer().getWorld("soc");
+	static World world = Bukkit.getServer().getWorld("world");
 	public static Location locBR2 = new Location(world, -899.00, 4.00, -935.00);
 	public static Location firstLocBR4 = new Location(world, -871.00, 4.00, -919.00);
 	public static Location secondLocBR4  = new Location(world, -871.00, 4.00, -966.00);

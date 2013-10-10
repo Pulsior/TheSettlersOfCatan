@@ -22,7 +22,6 @@ public class SurfaceRecognition {
 	 * @return
 	 */
 	public BoardSpace[] recognize(Location loc){
-		loc.setY(loc.getY()-1);
 		BoardSpace[] spaces = new BoardSpace[4];
 		
 		Location nLoc = newLoc(loc);

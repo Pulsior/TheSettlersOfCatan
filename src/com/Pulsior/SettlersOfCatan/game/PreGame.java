@@ -1,7 +1,6 @@
 package com.Pulsior.SettlersOfCatan.game;
 
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 
 import com.Pulsior.SettlersOfCatan.SettlerFileIO;
 
@@ -21,13 +20,6 @@ public class PreGame {
 		//Create folder to store files
 		io.makeDir();
 		Bukkit.getLogger().info("Settlers of Catan data folder created");
-		
-		//Generate new world
-		Bukkit.getServer().createWorld(new WorldCreator("soc"));
-		Bukkit.getLogger().info("The Settlers of Catan world has been generated");
-		
-		
-
 
 	}
 

@@ -95,8 +95,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 						else{
 							joinedPlayers[amtOfPlayers] = sender.getName(); //Add the player's name to the joinedPlayers array
 							ArrayStorage.players[amtOfPlayers] = sender.getName(); //Add the player's name to the joinedPlayers array
-							amtOfPlayers++; //Increase both values by one
-							ArrayStorage.amountOfPlayers++;
 							if(io.writeDataFile(sender.getName(), args[0]) == false){ //Write name and color to a file
 								sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
 							};
@@ -105,7 +103,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 							setColoredName(args[0], sender);
 							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);	
 							io.writePlayerFile(sender.getName()); //Write another player file
-							World w = Bukkit.getServer().getWorld("soc"); //Teleport the player to the spawn of the map
+							World w = Bukkit.getServer().getWorld("world"); //Teleport the player to the spawn of the map
 							Location loc = new Location(w, -872, 60, -954);
 							Player player = Bukkit.getServer().getPlayer(sender.getName());
 							player.teleport(loc);
@@ -114,6 +112,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 							player.sendMessage("You can fly now!");
 							player.setMetadata("number", new FixedMetadataValue(main, ArrayStorage.amountOfPlayers+1));
 							SettlersOfCatan.sPlayers[ArrayStorage.amountOfPlayers] = new SPlayer(ArrayStorage.amountOfPlayers+1);
+							amtOfPlayers++; //Increase both values by one
+							ArrayStorage.amountOfPlayers++;
 							return true;
 						}
 
@@ -337,19 +337,15 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		Player player = Bukkit.getServer().getPlayer(snd.getName());
 		if(color.equalsIgnoreCase("red") ){
 			player.setDisplayName("§4"+player.getName());
-			player.setPlayerListName("§4"+player.getName());
 		}
 		if(color.equalsIgnoreCase("green") ){
 			player.setDisplayName("§2"+player.getName());
-			player.setPlayerListName("§2"+player.getName());
 		}
 		if(color.equalsIgnoreCase("blue") ){
 			player.setDisplayName("§9"+player.getName());
-			player.setPlayerListName("§9"+player.getName());
 		}
 		if(color.equalsIgnoreCase("yellow") ){
 			player.setDisplayName("§e"+player.getName());
-			player.setPlayerListName("§e"+player.getName());
 		}
 	}
 	/**
@@ -412,6 +408,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		if(ArrayStorage.players[1] != null){
 			Player player = Bukkit.getServer().getPlayer(ArrayStorage.players[1]);
 			int number = getMetadata(Bukkit.getServer().getPlayer(ArrayStorage.players[1]), "number", SettlersOfCatan.plugin);
+			l.info("The number is " + Integer.toString(number) );
 			SPlayer sp = SettlersOfCatan.sPlayers[number];
 			sp.giveResources(Dice.lastValue, player);
 			
