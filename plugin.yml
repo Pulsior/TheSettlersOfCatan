@@ -12,16 +12,6 @@ commands:
       usage: /<command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
-   whichcoloris:
-      description: Tells you with which color a player is playing
-      usage: /<command> [player]
-      permission: <plugin name>.basic
-      permission-message: You don't have <permission>
-   whoplayswith:
-      description: Tells you who is playing with that color
-      usage: /<command> [color]
-      permission: <plugin name>.basic
-      permission-message: You don't have <permission>
    buy:
       description: Buy a settlement, road or city with your resources
       usage: /<command> [whatever you want to buy]
@@ -29,16 +19,28 @@ commands:
       permission-message: You don't have <permission>
    newgame:
       description: Start a new Settlers of Catan game
-      usage: <command>
+      usage: /<command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
    launchgame:
       description: Start playing!
-      usage: <command>
+      usage: /<command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
+      aliases: launch
    endturn:
       description: End your turn and allow someone else to play
-      usage: <command>
+      usage: /<command>
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
+   save:
+      description: Save the game to play another day
+      usage: /<command>
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>
+   load:
+      description: Load a saved game
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>
+
+      

@@ -11,14 +11,14 @@ import org.bukkit.scoreboard.Scoreboard;
  */
 
 public final class SettlersOfCatan extends JavaPlugin{
-	
+
 	public static SPlayer[] sPlayers = new SPlayer[4];
-	
+	public static Data data = new Data();
 	SettlerFileIO io = new SettlerFileIO();
 	public static Scoreboard board;
 	public static SettlersOfCatan plugin = new SettlersOfCatan();
-	
-	
+
+
 	@Override
 	public void onEnable(){
 		board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
@@ -29,19 +29,21 @@ public final class SettlersOfCatan extends JavaPlugin{
 		getCommand("endturn").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("newgame").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("join").setExecutor(new SettlersCommandExecutor(this));
-		getCommand("whichcoloris").setExecutor(new SettlersCommandExecutor(this));
-		getCommand("whoplayswith").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("check").setExecutor(new SettlersCommandExecutor(this));
 		getCommand("buy").setExecutor(new SettlersCommandExecutor(this));
+		getCommand("save").setExecutor(new SettlersCommandExecutor(this));
+		getCommand("load").setExecutor(new SettlersCommandExecutor(this));
 		getServer().getPluginManager().registerEvents(new SettlersEventListener(), this);
-				
-		
+
+
 	}
 
 	@Override
 	public void onDisable() {
+
 	}
-	
+
+
 
 
 }

@@ -15,6 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
+import com.Pulsior.SettlersOfCatan.board.BoardSpace;
+import com.Pulsior.SettlersOfCatan.board.StructureGen;
+import com.Pulsior.SettlersOfCatan.board.SurfaceRecognition;
+import com.Pulsior.SettlersOfCatan.game.Color;
+
 /**
  * Multi-purpose EventListener:
  * 	- To intercept chat messages and make them white, for the messages would have the color of their sender otherwise
@@ -44,14 +49,21 @@ public class SettlersEventListener implements Listener{
 		Player player = event.getPlayer();
 		if(block.getType().equals(Material.COMMAND)){ //If the block is a command block, a settlement will be built
 			Location loc = block.getLocation();
-			gen.buildSettlement(loc, colorCheck( getColor(player.getName() ) )) ;
-			Location location = block.getLocation();
-			location.setY(location.getY()-1);
-			BoardSpace[] spaces = recog.recognize(location);
-			SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; //TODO Fix 
-			for(int x = 0; x < 3; x++){
-				BoardSpace space = spaces[x];
-				p.addSpace(space);
+			Location loc2 = new Location(loc.getWorld(), loc.getX(), loc.getY()-1, loc.getZ());
+			if(loc2.getBlock().getType().equals(Material.GOLD_BLOCK)){
+				gen.buildSettlement(loc, colorCheck( SettlersOfCatan.data.getColor(player.getName() ) )) ;
+				Location location = block.getLocation();
+				location.setY(location.getY()-1);
+				BoardSpace[] spaces = recog.recognize(location);
+				SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; 
+				for(int x = 0; x < 4; x++){
+					BoardSpace space = spaces[x];
+					p.addSpace(space);
+				}
+			}
+			else{
+				event.setCancelled(true);
+				player.sendMessage("§cYou need to build a village on top of a gold block");
 			}
 		}
 		if(block.getType().equals(Material.BEDROCK)){ //If the block is bedrock, a city will be built
@@ -59,11 +71,11 @@ public class SettlersEventListener implements Listener{
 			Location loc2 = loc;
 			loc2.setY(loc2.getY()-1);
 			if(loc2.getBlock().getType().equals(Material.WOOL)){ //But only if the block beneath is wool
-				gen.buildCity(loc, colorCheck( getColor(player.getName() ) ), player);
+				gen.buildCity(loc, colorCheck( SettlersOfCatan.data.getColor (player.getName() ) ) , player);
 				Location location = block.getLocation();
 				location.setY(location.getY()-3);
 				BoardSpace[] spaces = recog.recognize(location);
-				SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; //TODO Fix 
+				SPlayer p = SettlersOfCatan.sPlayers[ getMetadata(player, "number", SettlersOfCatan.plugin) -1 ]; 
 				for(int x = 0; x < 3; x++){
 					BoardSpace space = spaces[x];
 					p.addSpace(space);
@@ -97,36 +109,32 @@ public class SettlersEventListener implements Listener{
 	}
 
 
-	public byte colorCheck(String color){
-		if(color.equalsIgnoreCase("red")){return 14;}
-		if(color.equalsIgnoreCase("blue")){return 11;}
-		if(color.equalsIgnoreCase("green")){return 13;}
-		if(color.equalsIgnoreCase("yellow")){return 4;}
+	public byte colorCheck(Color color){
+		switch(color){
+		
+		case RED:
+			return 14;
+		case BLUE:
+			return 11;
+		case GREEN:
+			return 13;
+		case YELLOW:
+			return 4;
+		}
+		
 		return 0;
 
 	}
 
-	public String getColor(String playerName){
 
-		String[] namesAndColors = io.readDataFile();
-		for(int x = 0; x < namesAndColors.length; x++){
 
-			if(namesAndColors[x].equalsIgnoreCase(playerName)){
-				return namesAndColors[x+1];
-			}
 
-		}
-		return null;
-	}
-	
-	
-	
-	
+
 	public int getMetadata(Player player, String key, Plugin plugin){
 		List<MetadataValue> values = player.getMetadata(key);  
 		for(MetadataValue value : values){
 			//if(value.getOwningPlugin().getDescription().getName().equals(plugin.getDescription().getName() ) ){
-				return value.asInt();
+			return value.asInt();
 			//}
 		}
 		return 0;

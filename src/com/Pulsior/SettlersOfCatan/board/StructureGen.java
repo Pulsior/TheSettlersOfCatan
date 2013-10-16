@@ -1,4 +1,4 @@
-package com.Pulsior.SettlersOfCatan;
+package com.Pulsior.SettlersOfCatan.board;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

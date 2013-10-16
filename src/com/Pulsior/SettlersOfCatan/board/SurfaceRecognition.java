@@ -1,4 +1,4 @@
-package com.Pulsior.SettlersOfCatan;
+package com.Pulsior.SettlersOfCatan.board;
 
 import java.util.logging.Logger;
 
@@ -6,6 +6,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+/**
+ * When a settlement or city is placed, the surrounding board spaces need
+ * to be determined. This is the task of this class.
+ * @author Pulsior
+ *
+ */
 
 public class SurfaceRecognition {
 	
@@ -23,29 +29,24 @@ public class SurfaceRecognition {
 	 */
 	public BoardSpace[] recognize(Location loc){
 		BoardSpace[] spaces = new BoardSpace[4];
-		
 		Location nLoc = newLoc(loc);
 		nLoc.setZ(nLoc.getZ()-7);
 		Resource northResource = getResource(nLoc);
-		log.info("North: "+northResource);
 		spaces[0] = new BoardSpace(northResource, nLoc, sv.getNumber(northResource, nLoc));
 		
 		Location eLoc = newLoc(loc);
 		eLoc.setX(eLoc.getX()+7);
 		Resource eastResource = getResource(eLoc);
-		log.info("East: "+eastResource);
 		spaces[1] = new BoardSpace(eastResource, eLoc, sv.getNumber(eastResource, eLoc));
 		
 		Location sLoc = newLoc(loc);
 		sLoc.setZ(sLoc.getZ()+7);
 		Resource southResource = getResource(sLoc);
-		log.info("South: "+southResource);
 		spaces[2] = new BoardSpace(southResource, sLoc, sv.getNumber(southResource, sLoc));
 		
 		Location wLoc = newLoc(loc);
 		wLoc.setX(wLoc.getX()-7);
 		Resource westResource  = getResource(wLoc);
-		log.info("West: "+ westResource);
 		spaces[3] = new BoardSpace(westResource, sLoc, sv.getNumber(westResource, wLoc));
 		return spaces;
 	}

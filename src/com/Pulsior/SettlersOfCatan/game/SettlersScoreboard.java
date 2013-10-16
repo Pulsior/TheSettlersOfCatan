@@ -48,7 +48,7 @@ public class SettlersScoreboard {
 		if(players[1] != null){players[1].setScoreboard(SettlersOfCatan.board);}
 		if(players[2] != null){players[2].setScoreboard(SettlersOfCatan.board);}
 		if(players[3] != null){players[3].setScoreboard(SettlersOfCatan.board);}
-		Bukkit.getLogger().info("Done setting up the scoreboard!");
+		Bukkit.getLogger().info("[Settlers of Catan] Done setting up the scoreboard!");
 		
 
 	}

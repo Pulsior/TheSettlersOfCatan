@@ -24,7 +24,7 @@ public class IngameTrade {
 	 * Let a player trade in resources for a road in his/her personal color
 	 * @param player
 	 */
-	public void buyRoad(Player player, String color){
+	public void buyRoad(Player player, Color color){
 		PlayerInventory inv = player.getInventory();
 		ItemStack wood = new ItemStack(Material.LOG, 1);
 		ItemStack bricks = new ItemStack(Material.BRICK, 1);
@@ -147,11 +147,17 @@ public class IngameTrade {
 	 * @param color
 	 * @return
 	 */
-	public short colorCheck(String color){
-		if(color.equalsIgnoreCase("red")){return 14;}
-		if(color.equalsIgnoreCase("blue")){return 11;}
-		if(color.equalsIgnoreCase("green")){return 13;}
-		if(color.equalsIgnoreCase("yellow")){return 4;}
+	public short colorCheck(Color color){
+		switch(color){
+		case RED:
+			return 14;
+		case BLUE:
+			return 11;
+		case GREEN:
+			return 13;
+		case YELLOW:
+			return 4;
+		}
 		return 0;
 
 	}
