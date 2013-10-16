@@ -13,6 +13,7 @@ Implemented features:
   - Turn system
   - Dice system
   - Automatically give appropriate resources to players
+  - Ability to save the game and continue when the server has been reload
 
 Planned features:
   - Ability to buy development cards
