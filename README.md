@@ -21,5 +21,8 @@ Planned features:
   - Coastal trade
   - Permissions
 
-Please note that i don't have a Pulsior.com domain, but I used a com.Pulsior package structure
-since it's conventional.
+Please note:
+  - I don't have a Pulsior.com domain, but I used a com.Pulsior package structure
+    since it's conventional.
+  - This plugin is designed for use with a specific map. When using it with another Settlers of Catan map, the
+  automatic resource functions will not work.
