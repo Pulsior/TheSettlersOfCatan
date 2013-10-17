@@ -32,8 +32,6 @@ import com.Pulsior.SettlersOfCatan.game.Color;
 
 public class SettlersEventListener implements Listener{
 
-
-	SettlerFileIO io = new SettlerFileIO();
 	SurfaceRecognition recog = new SurfaceRecognition();
 	StructureGen gen = new StructureGen();
 	SettlersCommandExecutor c = new SettlersCommandExecutor();
@@ -89,7 +87,7 @@ public class SettlersEventListener implements Listener{
 
 	}
 	/**
-	 * If a player clicks a spot with a blaze rod, the resources of surrounding spaces are logged to the console
+	 * If a player clicks a spot with a stick, and it is colored wool, it will be removed
 	 * @param event
 	 */
 	@EventHandler
@@ -97,16 +95,23 @@ public class SettlersEventListener implements Listener{
 		Block block = event.getClickedBlock();
 		if(block != null){
 			if(event.getItem() != null){
-				if(event.getItem().equals(new ItemStack(Material.BLAZE_ROD))){
-					recog.recognize(block.getLocation());
-				}
 				if(event.getItem().equals(new ItemStack(Material.STICK))){
-					block.setType(Material.AIR);
+					if(  block.getType().equals( (Material.WOOL) ) ) {
+						byte data = block.getData();
+						if(data == 14 || data == 11 || data == 13 || data == 14){
+							block.setType(Material.AIR);
+							Location location = block.getLocation();
+							location.setY(location.getY()-1);
+							location.getBlock().setType(Material.AIR);
+						}
+						
+						
+					}
 				}
 			}
 		}
-
 	}
+
 
 
 	public byte colorCheck(Color color){

@@ -7,17 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-/**Class designed for interacting with files, all I/O traffic goes through the SettlerFileIO class
- * 
+/**
+ * Deprecated class that used to act as a hub for all i/o traffic. Will be removed in the next commit,
+ * preserving it for now until the plugin is tested will.
  * @author Pulsior
  *
  */
+
+@Deprecated
 public class SettlerFileIO {
 
 	boolean dataFileExists = false;
@@ -25,7 +27,7 @@ public class SettlerFileIO {
 	boolean playerFileExists = false;
 	Logger logger = Bukkit.getLogger();
 	/*
-	 * Writes names and team colors to "SettlersOfCatanPlayers.txt"
+	 * Writes names and team colors to "Players.txt"
 	 */
 	public boolean writeDataFile(String player, String playerColor){
 		try{
@@ -57,34 +59,6 @@ public class SettlerFileIO {
 			return false;
 		}
 		return true;
-	}
-
-
-
-	/**
-	 * Reads out the "SetlersOfCatanPlayers.txt" file and stores the acquired data in an String[] array.
-	 */
-	public String[] readDataFile(){
-		ArrayList<String> ar = new ArrayList<String>(); //Starting with an ArrayList, for we don't know how many names will be in the file
-		String[] namesAndColors; //Switch to String[] later, since arrays are far simpler to handle than ArrayLists
-		try{
-			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/Players.txt"));
-			String line = input.readLine();
-			while(line != null){
-				ar.add(line);
-				line = input.readLine();
-			}
-			namesAndColors = new String[ar.size()];
-			for(int x = 0; x < ar.size(); x++){
-				namesAndColors[x] = ar.get(x);
-			}
-			input.close();
-			return namesAndColors;
-		}
-		catch(IOException ex){
-
-		}
-		return null; //Return null if everything failed...
 	}
 
 
@@ -127,81 +101,4 @@ public class SettlerFileIO {
 
 		return null;
 	}
-
-	public String[] getJoinedPlayersAsString(){
-		boolean readLine = true;
-		ArrayList<String> playerNames = new ArrayList<String>();
-		try{
-			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/Players.txt"));
-			String line = input.readLine();
-			while(line != null){
-				if(readLine){
-					playerNames.add(line);
-				}							
-				readLine = !(readLine);
-				line = input.readLine();
-			}
-			input.close();
-			logger.info (Integer.toString(playerNames.size() ) );
-			String[] players = new String[4];
-			for(int x = 0; playerNames.size() > x; x++ ){
-				players[x] = playerNames.get(x);
-			}
-			return players;
-
-
-		}
-		catch(IOException ex){
-
-		}
-
-		return null;
-	}
-
-
-	public String[] getResourceData(int num){
-		String snum = Integer.toString(num);
-		List<String> lines = new ArrayList<String>();
-		try{
-			BufferedReader input = new BufferedReader( new FileReader("plugins/Settlers Of Catan/ResourceData/Player"+snum));
-			String line = input.readLine();
-			while(line != null){
-				lines.add(line);
-				line = input.readLine();
-			}
-
-			input.close();
-		}
-		catch(IOException ex){
-
-		}
-		return null;
-	}
-
-	public int getAmountOfLines(String path){
-		try{
-			@SuppressWarnings("unused")
-			boolean x = true;
-			int lines = 0;
-			BufferedReader input = new BufferedReader(new FileReader(path) );
-			String line = input.readLine();
-			while(true){
-				lines++;
-				line = input.readLine();
-				if(line == null){
-					input.close();
-					return lines;
-				}
-
-			}
-			
-
-		}
-		catch(IOException ex){
-
-		}
-
-		return 0;
-	}
-
 }

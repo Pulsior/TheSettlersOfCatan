@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,7 +45,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	Dice dice = new Dice();
 	private SettlersOfCatan main;
 	private String[] joinedPlayers = new String[4];
-	SettlerFileIO io = new SettlerFileIO();
 	IngameTrade trade = new IngameTrade();
 	boolean game;
 	public static PreGame pregame;
@@ -97,15 +97,11 @@ public class SettlersCommandExecutor implements CommandExecutor {
 
 						else{
 							SettlersOfCatan.data.players[SettlersOfCatan.data.amountOfPlayers] = sender.getName(); //Add the player's name to the joinedPlayers array
-							if(io.writeDataFile(sender.getName(), args[0]) == false){ //Write name and color to a file
-								sender.sendMessage("§cPlayer registration failed, please reload the server and try again");
-							};
 							colorMessage(sender, color); //Set color properties
 							setColorInUse(color);
 							setColoredName(color, sender.getName() );
 							SettlersOfCatan.data.setColor(color, SettlersOfCatan.data.amountOfPlayers);
 							Bukkit.broadcastMessage("§6"+sender.getName()+" is now playing with "+args[0]);	
-							io.writePlayerFile(sender.getName()); //Write another player file
 							World w = Bukkit.getServer().getWorld("world"); //Teleport the player to the spawn of the map
 							Location loc = new Location(w, -872, 60, -954);
 							Player player = Bukkit.getServer().getPlayer(sender.getName());
@@ -141,7 +137,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 		 * thus impossible to use for a normal user
 		 */
 		if(cmd.getName().equalsIgnoreCase("check")){
-			logger.info(SettlersOfCatan.data.players[0]);
+			Bukkit.getServer().getPlayer(sender.getName()).setPlayerWeather(WeatherType.DOWNFALL);
 			return true;
 		}		
 
@@ -241,6 +237,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Bukkit.broadcastMessage("§aThe game was saved");
 			return true;
 		}
+		
 
 		if(cmd.getName().equalsIgnoreCase("load")){
 			loadGlobalData();
@@ -408,22 +405,6 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	}
 
 
-	/**
-	 * Returns the name of the player using the specified color
-	 * @param color
-	 * @return
-	 */
-	public String getPlayerName(String color){
-		String[] namesAndColors = io.readDataFile();
-		for(int x = 0; x < namesAndColors.length; x++){
-
-			if(namesAndColors[x].equalsIgnoreCase(color)){
-				return namesAndColors[x-1];
-			}
-
-		}
-		return null;
-	}
 	/**
 	 * Method to end a player's turn. Also give the appropriate resources to a player
 	 */
@@ -611,6 +592,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			player2.setMetadata("number", new FixedMetadataValue(main, player.getPlayerNumber() ) );
 			Color color = SettlersOfCatan.data.getColor( player2.getName() );
 			setColoredName(color, player2.getName());
+			player2.setAllowFlight(true);
+			player2.setGameMode(GameMode.ADVENTURE);
 		}
 		else{
 			logger.info("[Settlers of Catan] Executed with ssp null!");

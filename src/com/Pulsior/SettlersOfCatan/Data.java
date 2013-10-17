@@ -2,6 +2,9 @@ package com.Pulsior.SettlersOfCatan;
 
 import java.io.Serializable;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import com.Pulsior.SettlersOfCatan.game.Color;
 
 /**
@@ -38,5 +41,14 @@ public class Data implements Serializable{
 	
 	public void setColor(Color color, int position){
 		colors[position] = color;
+	}
+	
+	public Player[] getJoinedPlayers(){
+		Player[] players = new Player[4];
+		for(int x = 0; x < amountOfPlayers; x++){
+			players[x] = Bukkit.getServer().getPlayer(this.players[x]);
+			
+		}
+		return players;
 	}
 }

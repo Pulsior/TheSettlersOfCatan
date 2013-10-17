@@ -14,7 +14,6 @@ public final class SettlersOfCatan extends JavaPlugin{
 
 	public static SPlayer[] sPlayers = new SPlayer[4];
 	public static Data data = new Data();
-	SettlerFileIO io = new SettlerFileIO();
 	public static Scoreboard board;
 	public static SettlersOfCatan plugin = new SettlersOfCatan();
 
