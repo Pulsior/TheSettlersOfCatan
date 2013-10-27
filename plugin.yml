@@ -39,8 +39,9 @@ commands:
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
    load:
+  
       description: Load a saved game
-	  usage: Not all the saved players are online
+      usage: Not all the saved players are online
       permission: <plugin name>.basic
       permission-message: You don't have <permission>
 

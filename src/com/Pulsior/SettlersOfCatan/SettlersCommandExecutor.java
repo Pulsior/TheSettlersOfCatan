@@ -28,6 +28,7 @@ import com.Pulsior.SettlersOfCatan.game.Color;
 import com.Pulsior.SettlersOfCatan.game.Dice;
 import com.Pulsior.SettlersOfCatan.game.IngameTrade;
 import com.Pulsior.SettlersOfCatan.game.PreGame;
+import com.Pulsior.SettlersOfCatan.game.SettlersScoreboard;
 
 /**
  * The CommandExecutor class, where much of the magic happens. To prevent class data transition errors,
@@ -477,7 +478,7 @@ public class SettlersCommandExecutor implements CommandExecutor {
 	 */
 	public void savePlayerData(int number){
 		SPlayer player = SettlersOfCatan.sPlayers[number-1];
-		SerializableSPlayer ssp = new SerializableSPlayer(player.getPlayerNumber(), player.getPlayerName());
+		SerializableSPlayer ssp = new SerializableSPlayer(player.getPlayerNumber(), player.getPlayerName(), SettlersOfCatan.board.getObjective("victory").getScore( player.getPlayer() ).getScore() );
 		for( BoardSpace space : player.getClaimed()){
 			ssp.addSpace(new SerializableBoardSpace(space.getResource(), space.getLocation().getX(),
 					space.getLocation().getY(), space.getLocation().getZ(), space.getSpaceNumber()));
@@ -551,11 +552,12 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			Data data = (Data) objInput.readObject();
 			objInput.close();
 			if(data == null){
-				logger.info("[Settlers of Catan] The global data is equal to null.");
+				logger.info("[Settlers of Catan] The global data file equals null, did something go wrong while saving?");
 			}
 			else{
 				SettlersOfCatan.data = data;
 			}
+			new SettlersScoreboard();
 		}
 		catch(IOException ex){
 			logger.info("[Settlers of Catan] An IOException occured while loading the global data");
@@ -572,6 +574,8 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			}
 
 		}
+		
+		
 	}
 
 	/**
@@ -594,12 +598,15 @@ public class SettlersCommandExecutor implements CommandExecutor {
 			setColoredName(color, player2.getName());
 			player2.setAllowFlight(true);
 			player2.setGameMode(GameMode.ADVENTURE);
+			SettlersOfCatan.board.getObjective("victory").getScore(player2).setScore( ssp.getScore() );
 		}
 		else{
 			logger.info("[Settlers of Catan] Executed with ssp null!");
 		}
 
 	}
+	
+	
 
 
 }
