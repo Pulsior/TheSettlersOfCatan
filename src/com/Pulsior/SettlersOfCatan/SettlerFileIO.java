@@ -1,7 +1,6 @@
 package com.Pulsior.SettlersOfCatan;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -61,13 +60,6 @@ public class SettlerFileIO {
 		return true;
 	}
 
-
-	public void makeDir(){
-		File dataFolder = new File("plugins/Settlers Of Catan");
-		if(! (dataFolder.exists() ) ){
-			dataFolder.mkdir();
-		}
-	}
 
 	/**
 	 * Returns an array of all joined players

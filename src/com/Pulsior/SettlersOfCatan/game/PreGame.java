@@ -1,8 +1,8 @@
 package com.Pulsior.SettlersOfCatan.game;
 
-import org.bukkit.Bukkit;
+import java.io.File;
 
-import com.Pulsior.SettlersOfCatan.SettlerFileIO;
+import org.bukkit.Bukkit;
 
 /**
  * Class instantiated as pregame, where players can join but can't build stuff yet.
@@ -13,8 +13,6 @@ import com.Pulsior.SettlersOfCatan.SettlerFileIO;
 public class PreGame {
 
 	public static boolean preGame = false;
-	SettlerFileIO io = new SettlerFileIO();
-
 	public PreGame(){
 
 		//Indicate that pregame has been launched
@@ -22,9 +20,16 @@ public class PreGame {
 		Bukkit.getLogger().info("[Settlers of Catan] Started pregame, players can join the game now");
 
 		//Create folder to store files
-		io.makeDir();
+		makeDir();
 		Bukkit.getLogger().info("[Settlers of Catan] Settlers of Catan data folder created");
 
+	}
+	
+	public void makeDir(){
+		File dataFolder = new File("plugins/Settlers Of Catan");
+		if(! (dataFolder.exists() ) ){
+			dataFolder.mkdir();
+		}
 	}
 
 
